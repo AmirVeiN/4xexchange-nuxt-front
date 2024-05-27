@@ -17,7 +17,7 @@ const Popup = (props) => {
             window.location.href = "/pannel";
         }
         if (props.location === "login") {
-            window.location.href = "/login";
+            window.location.href = "/Login";
         }
     };
 

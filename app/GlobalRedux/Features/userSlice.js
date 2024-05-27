@@ -59,11 +59,11 @@ axiosInstance.interceptors.response.use(
                         });
                 } else {
                     logout()
-                    window.location.href = '/login/';
+                    window.location.href = '/Login';
                 }
             } else {
                 logout()
-                window.location.href = '/login/';
+                window.location.href = '/Login';
             }
         }
 

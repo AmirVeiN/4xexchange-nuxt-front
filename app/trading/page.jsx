@@ -447,7 +447,7 @@ export default function ChartComponent() {
                             {user && user.user_type !== 4 && <button type='submit' className='w-full py-4 text-2xl rounded-lg text-white font-bold bg-tradeGreen mt-5'>
                                 Buy Token
                             </button>}
-                            {!user && <Link href="/login" className='w-full py-4 text-center text-2xl rounded-lg text-white font-bold bg-tradeGreen mt-5'>
+                            {!user && <Link href="/Login" className='w-full py-4 text-center text-2xl rounded-lg text-white font-bold bg-tradeGreen mt-5'>
                                 Login
                             </Link>}
                             {user && user.user_type === 4 && <Link href="/pannel" className='w-full space-x-2 flex flex-row justify-center items-center py-4 text-2xl rounded-lg text-white font-bold bg-tradeGreen mt-5'>
@@ -501,7 +501,7 @@ export default function ChartComponent() {
                             {user && user.user_type !== 4 && <button type='submit' className='w-full py-4 text-2xl rounded-lg text-white font-bold bg-tradeRed mt-5'>
                                 Sell Token
                             </button>}
-                            {!user && <Link href="/login" className='w-full py-4 text-center text-2xl rounded-lg text-white font-bold bg-tradeRed mt-5'>
+                            {!user && <Link href="/Login" className='w-full py-4 text-center text-2xl rounded-lg text-white font-bold bg-tradeRed mt-5'>
                                 Login
                             </Link>}
                             {user && user.user_type === 4 && <Link href="/pannel" className='w-full space-x-2 flex flex-row justify-center items-center py-4 text-2xl rounded-lg text-white font-bold bg-tradeRed mt-5'>
@@ -561,7 +561,7 @@ export default function ChartComponent() {
                             {user && user.user_type !== 4 && <button type='submit' className='w-full py-4 text-2xl rounded-lg text-white font-bold bg-tradeGreen mt-5'>
                                 Buy Token
                             </button>}
-                            {!user && <Link href="/login" className='w-full py-4 text-center text-2xl rounded-lg text-white font-bold bg-tradeGreen mt-5'>
+                            {!user && <Link href="/Login" className='w-full py-4 text-center text-2xl rounded-lg text-white font-bold bg-tradeGreen mt-5'>
                                 Login
                             </Link>}
                             {user && user.user_type === 4 && <Link href="/pannel" className='w-full space-x-2 flex flex-row justify-center items-center py-4 text-2xl rounded-lg text-white font-bold bg-tradeGreen mt-5'>
@@ -614,7 +614,7 @@ export default function ChartComponent() {
                             {user && user.user_type !== 4 && <button type='submit' className='w-full py-4 text-2xl rounded-lg text-white font-bold bg-tradeRed mt-5'>
                                 Sell Token
                             </button>}
-                            {!user && <Link href="/login" className='w-full py-4 text-center text-2xl rounded-lg text-white font-bold bg-tradeRed mt-5'>
+                            {!user && <Link href="/Login" className='w-full py-4 text-center text-2xl rounded-lg text-white font-bold bg-tradeRed mt-5'>
                                 Login
                             </Link>}
                             {user && user.user_type === 4 && <Link href="/pannel" className='w-full space-x-2 flex flex-row justify-center items-center py-4 text-2xl rounded-lg text-white font-bold bg-tradeRed mt-5'>
