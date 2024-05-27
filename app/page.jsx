@@ -89,7 +89,7 @@ export default function Home() {
           <Image src={secondImg} alt="" width={500} />
         </div>
         <div className="flex flex-col w-full lg:w-1/2 justify-center lg:justify-start items-center px-5 lg:pl-20 space-y-10">
-          <p className="text-background dark:text-white w-full text-center lg:text-start font-bold 3xl:text-6xl 2xl:text-6xl xl:text-6xl lg:text-5xl md:text-5xl sm:text-5xl ph:text-3xl">One of the world's largest exchanges</p>
+          <p className="text-background dark:text-white w-full text-center lg:text-start font-bold 3xl:text-6xl 2xl:text-6xl xl:text-6xl lg:text-5xl md:text-5xl sm:text-5xl ph:text-3xl">One of the world`s largest exchanges</p>
           <p className="text-gray dark:text-silver w-full text-center lg:text-start font-medium 3xl:text-3xl 2xl:text-3xl xl:text-3xl lg:text-2xl md:text-2xl sm:text-2xl ph:text-lg">With a high volume of trading on a daily basis, you can easily deposit your money and start trading,click to start</p>
           <div className="flex flex-row justify-center space-x-5 items-center w-full lg:justify-start">
             <Link href='/trading' className="bg-yellow dark:bg-yellowBorder font-bold text-xl lg:text-2xl text-background rounded-3xl px-4 py-2">Get Started</Link>
@@ -121,7 +121,7 @@ export default function Home() {
         <div className="flex w-full lg:w-80 flex-col space-y-2 justify-center items-center z-20">
           <div><Image src={imgthree} alt="" width={250} /></div>
           <p className="text-yellow dark:text-white font-bold 3xl:text-2xl 2xl:text-2xl xl:text-xl lg:text-xl md:text-xl sm:text-2xl ph:text-2xl">Easy to start</p>
-          <p className="text-gray text-center text-xl md:text-lg">if you want to start trading instead of using these big complex techniques, it's just one click to start</p>
+          <p className="text-gray text-center text-xl md:text-lg">if you want to start trading instead of using these big complex techniques, it`s just one click to start</p>
         </div>
         <div className="flex w-full lg:w-80 flex-col space-y-2 justify-center items-center z-20">
           <div><Image src={imgfour} alt="" width={400} /></div>

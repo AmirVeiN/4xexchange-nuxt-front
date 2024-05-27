@@ -28,7 +28,12 @@ export default function Header() {
     const dropdownRef = useRef();
     const [darkMode, setDarkMode] = useState(false);
 
-    const [activeItem, setActiveItem] = React.useState(window.location.pathname);
+    if (typeof localStorage !== "undefined") {
+        var path = window.location.pathname
+        var authStorage = localStorage.getItem('auth')
+    }
+
+    const [activeItem, setActiveItem] = React.useState(path);
 
     const handleClick = (url) => {
         setActiveItem(url);
@@ -67,14 +72,14 @@ export default function Header() {
     const dispatch = useDispatch();
 
     const user = useSelector((state) => state.user.isAuthenticated)
-    const auth = localStorage.getItem('auth')
+    const auth = authStorage
 
     return (
         <div className={activeItem !== "/trading" ? "flex flex-col z-40 bg-back dark:bg-background" : "flex flex-col z-40 bg-back dark:bg-black"}>
-            {activeItem === "/" && <div className="">
+            {/* {activeItem === "/" && <div className="">
                 <TickerTape />
             </div>
-            }
+            } */}
             {(activeItem !== "/Sign-Up" && activeItem !== "/Login" ) && <div className={activeItem !== "/trading" ? "hidden md:flex flex-row bg-back dark:bg-background h-20 justify-between items-center px-14 mt-2" : "hidden md:flex flex-row bg-back dark:bg-black h-20 justify-between items-center px-14 mt-2"}>
                 <div className="flex flex-row space-x-5 items-center">
                     <Link href="/" className="flex flex-row justify-center items-center space-x-2">

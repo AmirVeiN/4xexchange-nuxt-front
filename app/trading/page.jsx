@@ -51,7 +51,7 @@ export default function ChartComponent() {
 
         // return () => clearInterval(intervalId);
 
-    }, []);
+    }, [dispach]);
 
 
     useEffect(() => {
@@ -161,7 +161,7 @@ export default function ChartComponent() {
             window.removeEventListener('resize', handleResize);
             chart.remove();
         };
-    }, [chartTime, data, price, infoClient, infoPublic]);
+    }, [chartTime, data, price, infoClient, infoPublic,dispach,user]);
 
 
     if ((!data && !infoPublic || !price) || (user && !infoClient)) {

@@ -1,19 +1,25 @@
-"use client"
 import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import axios from "axios";
 
+
+if (typeof localStorage !== "undefined") {
+    var access = localStorage.getItem('access')
+    var refresh = localStorage.getItem('refresh');
+}
 
 const axiosInstance = axios.create({
     baseURL: 'https://server.4xexchange.com/api/v1/',
     timeout: 5000,
     headers: {
-        Authorization: localStorage.getItem('access')
-            ? 'JWT ' + localStorage.getItem('access')
+
+        Authorization: access
+            ? 'JWT ' + access
             : null,
         'Content-Type': 'application/json',
         accept: 'application/json',
     },
 });
+
 
 axiosInstance.interceptors.response.use(
     (response) => {
@@ -23,7 +29,7 @@ axiosInstance.interceptors.response.use(
         const originalRequest = error.config;
 
         if ((error.response.status === 401 && error.response.statusText === 'Unauthorized') || (error.response.status === 403 && error.response.statusText === 'Forbidden')) {
-            const refreshToken = localStorage.getItem('refresh');
+            const refreshToken = refresh
 
             if (refreshToken && refreshToken !== "undefined") {
                 const tokenParts = JSON.parse(atob(refreshToken.split('.')[1]));
@@ -35,8 +41,11 @@ axiosInstance.interceptors.response.use(
                         .post('/jwt/refresh/', { refresh: refreshToken })
                         .then((response) => {
 
-                            localStorage.setItem('access', response.data.access);
-                            localStorage.setItem('refresh', response.data.refresh);
+                            if (typeof localStorage !== "undefined") {
+
+                                localStorage.setItem('access', response.data.access);
+                                localStorage.setItem('refresh', response.data.refresh);
+                            }
 
                             axiosInstance.defaults.headers['Authorization'] =
                                 'JWT ' + response.data.access;

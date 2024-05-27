@@ -128,7 +128,7 @@ export default function Admin() {
 
             return () => clearInterval(intervalId);
         }
-    }, []);
+    }, [activeButton,dispatch]);
 
     useEffect(() => {
 
@@ -137,7 +137,7 @@ export default function Admin() {
             return;
         }
 
-    }, [temporaryChartNumbers]);
+    }, [dispatch,temporaryChartNumbers]);
 
     useEffect(() => {
 
@@ -146,7 +146,7 @@ export default function Admin() {
             return;
         }
 
-    }, [chartNumbers]);
+    }, [dispatch,chartNumbers]);
 
     useEffect(() => {
 
@@ -155,7 +155,7 @@ export default function Admin() {
             return;
         }
 
-    }, [allDepoits]);
+    }, [dispatch,allDepoits]);
 
     useEffect(() => {
 
@@ -164,7 +164,7 @@ export default function Admin() {
             return;
         }
 
-    }, [SellAndBuy]);
+    }, [dispatch,SellAndBuy]);
 
     useEffect(() => {
 
@@ -173,13 +173,13 @@ export default function Admin() {
             return;
         }
 
-    }, [requestDeposit]);
+    }, [dispatch,requestDeposit]);
 
     useEffect(() => {
         if (!members) {
             dispatch(AdminUserList());
         }
-    }, [members]);
+    }, [dispatch,members]);
 
 
     useEffect(() => {

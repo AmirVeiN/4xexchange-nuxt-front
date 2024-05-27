@@ -90,7 +90,7 @@ export default function Pannel() {
         if (!data) {
             dispatch(getUser());
         }
-    }, []);
+    }, [dispatch,data]);
 
     useEffect(() => {
 
@@ -109,7 +109,7 @@ export default function Pannel() {
             return () => clearInterval(intervalId);
         }
 
-    }, [change]);
+    }, [change , activeButton]);
 
     useEffect(() => {
 
