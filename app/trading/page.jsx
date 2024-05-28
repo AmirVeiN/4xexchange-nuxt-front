@@ -4,13 +4,13 @@ import { createChart, ColorType } from 'lightweight-charts';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import LoadingPage from '../../components/loading';
-import { ToastContainer, toast } from 'react-toastify';
 import { BuyUSDTClient, SellUSDTClient, GetSellAndBuyClient, GetChartDetail, GetSellAndBuyPublic, ChartData } from "../GlobalRedux/Features/userSlice";
 import Popup from '../../components/modal';
 import { IoInformationCircleSharp } from "react-icons/io5";
 import { FaBoxArchive } from "react-icons/fa6";
 import Link from 'next/link';
 import { GoAlertFill } from "react-icons/go";
+import { toast } from 'sonner';
 
 
 export default function ChartComponent() {
@@ -687,7 +687,6 @@ export default function ChartComponent() {
                     </div>
                 </div>
             </div> */}
-            <ToastContainer />
             {
                 showMessage && <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
                     <Message />

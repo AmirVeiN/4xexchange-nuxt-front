@@ -10,11 +10,8 @@ import { FaBan } from "react-icons/fa";
 import { MdAdminPanelSettings } from "react-icons/md";
 import { GiShieldDisabled } from "react-icons/gi";
 import { FaUserFriends } from "react-icons/fa";
-import { MdKeyboardArrowLeft } from "react-icons/md";
 import React, { useEffect, useState } from "react";
-import { resetPassword, GetSellAndBuyAdmin, AddPriceData, DisableDeposit, AcceptDeposit, ChangeVolume, DepositRequests, allDepositUsers, changeCurrnecy, changeWithdrawAnswer, AdminUserList, changeStatusUser, AdminWithdraws, logout, UserFullDetails, AdminTicketList, AdminTicketAnswer, AdminTicketComplete, AdminUserSearch, ChartData, temporaryChartData, getUser } from "../GlobalRedux/Features/userSlice";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { GetSellAndBuyAdmin, AddPriceData, DisableDeposit, AcceptDeposit, ChangeVolume, DepositRequests, allDepositUsers, changeCurrnecy, changeWithdrawAnswer, AdminUserList, changeStatusUser, AdminWithdraws, logout, UserFullDetails, AdminTicketList, AdminTicketAnswer, AdminTicketComplete, AdminUserSearch, ChartData, temporaryChartData, getUser } from "../GlobalRedux/Features/userSlice";
 import LoadingPage from '../../components/loading';
 import Popup from "../../components/modal"
 import { FaBoxArchive } from "react-icons/fa6";
@@ -37,6 +34,7 @@ import { IoMdCloseCircle } from "react-icons/io";
 import { FaRegCircleCheck } from "react-icons/fa6";
 import Image from "next/image";
 import Logo from "../../public/logo.png"
+import { toast } from 'sonner';
 
 export default function Admin() {
 
@@ -128,7 +126,7 @@ export default function Admin() {
 
             return () => clearInterval(intervalId);
         }
-    }, [activeButton,dispatch]);
+    }, [activeButton, dispatch]);
 
     useEffect(() => {
 
@@ -137,7 +135,7 @@ export default function Admin() {
             return;
         }
 
-    }, [dispatch,temporaryChartNumbers]);
+    }, [dispatch, temporaryChartNumbers]);
 
     useEffect(() => {
 
@@ -146,7 +144,7 @@ export default function Admin() {
             return;
         }
 
-    }, [dispatch,chartNumbers]);
+    }, [dispatch, chartNumbers]);
 
     useEffect(() => {
 
@@ -155,7 +153,7 @@ export default function Admin() {
             return;
         }
 
-    }, [dispatch,allDepoits]);
+    }, [dispatch, allDepoits]);
 
     useEffect(() => {
 
@@ -164,7 +162,7 @@ export default function Admin() {
             return;
         }
 
-    }, [dispatch,SellAndBuy]);
+    }, [dispatch, SellAndBuy]);
 
     useEffect(() => {
 
@@ -173,13 +171,13 @@ export default function Admin() {
             return;
         }
 
-    }, [dispatch,requestDeposit]);
+    }, [dispatch, requestDeposit]);
 
     useEffect(() => {
         if (!members) {
             dispatch(AdminUserList());
         }
-    }, [dispatch,members]);
+    }, [dispatch, members]);
 
 
     useEffect(() => {
@@ -211,26 +209,7 @@ export default function Admin() {
 
     const handleSubmit = (type, index) => {
 
-        if (type === "password") {
-
-            if (password !== "" && re_password !== "") {
-
-                if (password === re_password) {
-
-                    dispatch(resetPassword({ new_password: password, re_new_password: re_password, current_password: currentPassword }))
-
-                } else {
-
-                    toast.error("password not match")
-                }
-
-            } else {
-
-                toast.error("password is empty")
-
-            }
-        }
-        else if (type === "TicketAnswer") {
+        if (type === "TicketAnswer") {
 
             if (ticketDetail.ticket_status !== "Completed") {
 
@@ -292,7 +271,11 @@ export default function Admin() {
 
                 dispatch(AddPriceData({ number: newPrice, run_at: newTime })).then((e) => {
                     if (e.type.includes("fulfilled")) {
-                        toast.info("Action Creates Success")
+                        toast.success('Action Creates Success', {
+                            position: 'top-right',
+                            autoClose: 5000,
+                            variant: 'success',
+                        });
                     }
                 });
 
@@ -1603,7 +1586,6 @@ export default function Admin() {
                     </div>}
 
                 </div>
-                <ToastContainer />
             </div>
             {
                 showMessage && <div className='fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>

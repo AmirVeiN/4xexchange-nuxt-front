@@ -19,7 +19,6 @@ import { FaUserEdit } from "react-icons/fa";
 import { FaUserTag } from "react-icons/fa";
 import { MdDarkMode } from "react-icons/md";
 import { MdLightMode } from "react-icons/md";
-import { TickerTape } from "react-tradingview-embed";
 import Image from "next/image";
 
 export default function Header() {
@@ -76,10 +75,6 @@ export default function Header() {
 
     return (
         <div className={activeItem !== "/trading" ? "flex flex-col z-40 bg-back dark:bg-background" : "flex flex-col z-40 bg-back dark:bg-black"}>
-            {/* {activeItem === "/" && <div className="">
-                <TickerTape />
-            </div>
-            } */}
             {(activeItem !== "/Sign-Up" && activeItem !== "/Login" ) && <div className={activeItem !== "/trading" ? "hidden md:flex flex-row bg-back dark:bg-background h-20 justify-between items-center px-14 mt-2" : "hidden md:flex flex-row bg-back dark:bg-black h-20 justify-between items-center px-14 mt-2"}>
                 <div className="flex flex-row space-x-5 items-center">
                     <Link href="/" className="flex flex-row justify-center items-center space-x-2">

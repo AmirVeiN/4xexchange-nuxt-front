@@ -3,13 +3,12 @@
 import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import Link from "next/link";
-import { ToastContainer, toast } from 'react-toastify';
 import { useDispatch } from "react-redux";
 import { login, getUser } from "../GlobalRedux/Features/userSlice";
-import 'react-toastify/dist/ReactToastify.css';
 import React, { useState } from 'react';
 import { useRouter } from 'next/navigation'
 import Image from "next/image";
+import { toast } from 'sonner';
 
 export default function LoginForm() {
 
@@ -110,7 +109,6 @@ export default function LoginForm() {
                     </div>
                 </div>
             </div>
-            <ToastContainer />
         </div >
     )
 };

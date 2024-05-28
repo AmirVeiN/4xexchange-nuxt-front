@@ -9,8 +9,7 @@ import { GiShieldDisabled } from "react-icons/gi";
 import React, { useEffect, useState } from "react";
 import logo2 from "../../public/logo.png"
 import { resetPassword, createTicket, allTickets, logout, getUser, GetChartDetail, ClientTicketAnswer, GetSellAndBuyClient, clientWithdrawsList, DepositHistoryClient, withdrawEmail, withdrawEmailConfirmation } from "../GlobalRedux/Features/userSlice";
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'sonner';
 import LoadingPage from '../../components/loading';
 import Popup from "../../components/modal"
 import { FaBoxArchive } from "react-icons/fa6";
@@ -1144,11 +1143,7 @@ export default function Pannel() {
                             })}
                         </div>}
                     </div>}
-
-
-
                 </div>
-                <ToastContainer />
             </div >
             {
                 showMessage && <div className='fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>

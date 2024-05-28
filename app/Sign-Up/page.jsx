@@ -5,8 +5,7 @@ import { MdEmail } from "react-icons/md";
 import { RiLockPasswordFill } from "react-icons/ri";
 import ReCAPTCHA from "react-google-recaptcha";
 import Link from 'next/link';
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'sonner';
 import Popup from "../../components/modal"
 import { FaUser } from "react-icons/fa";
 import { useDispatch } from "react-redux";
@@ -195,7 +194,6 @@ export default function RegistrationForm() {
                     </div>
                 </div>}
             </div>
-            <ToastContainer />
             {
                 showMessage && <div className='fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
                     <Message />

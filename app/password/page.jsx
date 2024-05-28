@@ -7,8 +7,7 @@ import Link from "next/link";
 import { RiArrowGoBackFill } from "react-icons/ri";
 import Popup from "../../components/modal"
 import logo from "../../public/logo.png"
-import { ToastContainer, toast } from 'react-toastify';
-import 'react-toastify/dist/ReactToastify.css';
+import { toast } from 'sonner';
 import Image from "next/image";
 
 export default function Password() {
@@ -154,7 +153,6 @@ export default function Password() {
                 <Message />
             </div>
         }
-        <ToastContainer />
     </div>
 }
 
