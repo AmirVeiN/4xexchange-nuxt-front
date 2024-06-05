@@ -41,18 +41,13 @@ export default function LoginForm() {
         dispatch(login({ email: email, password: password })).then((e) => {
             if (e.type.includes("fulfilled")) {
                 waitForToken().then(() => {
-                    dispatch(getUser()).then((b) => {
-                        if (b.type.includes("fulfilled")) {
-                            router.push("/")
-                        } else if (e.type.includes("rejected")) {
-                            toast.error("Something Wrong")
-                        }
+                    dispatch(getUser()).then(() => {
+                        location.reload();
                     })
                 })
             }
         });
 
-        return false;
     };
 
 

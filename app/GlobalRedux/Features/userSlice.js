@@ -351,6 +351,7 @@ const userSlice = createSlice({
                 localStorage.setItem('access', action.payload.access);
                 localStorage.setItem('refresh', action.payload.refresh);
                 state.isAuthenticated = true;
+                location.href = '/';
             })
             .addCase(login.rejected, (state, action) => {
                 state.loading = false;

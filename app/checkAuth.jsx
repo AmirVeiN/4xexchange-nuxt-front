@@ -15,7 +15,7 @@ export default function CheckAuth() {
         if (localStorage.getItem('access')) {
       
             dispatch(activateAuth())
-      
+            
         }
             
     }, [dispatch]);
