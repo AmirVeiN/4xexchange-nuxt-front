@@ -41,9 +41,7 @@ export default function LoginForm() {
         dispatch(login({ email: email, password: password })).then((e) => {
             if (e.type.includes("fulfilled")) {
                 waitForToken().then(() => {
-                    dispatch(getUser()).then(() => {
-                        location.reload();
-                    })
+                    dispatch(getUser())
                 })
             }
         });

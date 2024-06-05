@@ -365,6 +365,7 @@ const userSlice = createSlice({
                 state.isAuthenticated = true;
                 state.user = action.payload;
                 localStorage.setItem('auth', action.payload.user_type);
+                location.reload();
             })
             .addCase(getUser.rejected, state => {
                 state.isAuthenticated = false;
