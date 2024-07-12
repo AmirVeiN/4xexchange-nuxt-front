@@ -11,6 +11,7 @@ import { FaUser } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { signUp, EmailCode } from "../GlobalRedux/Features/userSlice";
 import Image from 'next/image';
+import loginimg from "../../public/login.png"
 
 export default function RegistrationForm() {
 
@@ -89,15 +90,15 @@ export default function RegistrationForm() {
 
     return (
         <div className='relative'>
-            <div className={showMessage ? `h-full md:h-screen flex justify-center items-center bg-black blur-md mt-5 md:mt-0` : `h-full md:h-screen w-full flex justify-center items-center bg-black mt-5 md:mt-0`}>
-                {codePage ? <div className="bg-background rounded-2xl w-[360px] justify-between items-center py-5 h-[700px] flex flex-col shadow-lg shadow-white">
-                    <Image src="/logo.png" alt="" width={130} height={130} priority={true} />
+            <div className={showMessage ? `h-screen flex justify-center items-center bg-mainBlue blur-md ` : `h-screen w-full flex justify-center items-center bg-mainBlue `}>
+                {codePage ? <div className="bg-white rounded-2xl w-[360px] justify-between items-center py-5 h-[700px] flex flex-col shadow-lg shadow-white">
+                    <Image src={loginimg} alt="" width={300} height={300} priority={true} className="" />
                     <form onSubmit={(e) => { e.preventDefault(); handleSubmit("signup") }} className='flex flex-col justify-center space-y-6 h-full items-center w-[80%]'>
-                        <p className="w-full p-2 border focus:ring-4 focus:border-none focus:ring-yellow border-white text-sm text-center text-white rounded bg-background">{minutes.toString().padStart(2, '0')}:{seconds.toString().padStart(2, '0')}</p>
-                        <p className="w-full p-2 border focus:ring-4 focus:border-none focus:ring-yellow border-white text-sm text-center text-white rounded bg-background">Enter the code received from the email</p>
+                        <p className="w-full p-2 border focus:ring-4 focus:border-none  border-mainBlue text-sm text-center text-mainBlue rounded bg-white">{minutes.toString().padStart(2, '0')}:{seconds.toString().padStart(2, '0')}</p>
+                        <p className="w-full p-2 border focus:ring-4 focus:border-none  border-mainBlue text-sm text-center text-mainBlue rounded bg-white">Enter the code received from the email</p>
                         <div className='flex flex-row space-x-2 w-full items-center'>
-                            <div className='border border-white rounded w-16 h-10 flex justify-center items-center' >
-                                <MdEmail color='white' size={20} />
+                            <div className='border border-mainBlue rounded w-16 h-10 flex justify-center items-center' >
+                                <MdEmail color='#21749c' size={20} />
                             </div>
                             <input
                                 required
@@ -105,94 +106,100 @@ export default function RegistrationForm() {
                                 placeholder="code"
                                 value={code}
                                 onChange={handleCode}
-                                className="w-full p-2 border focus:ring-4 focus:border-none focus:ring-yellow border-white text-white rounded bg-background"
+                                className="w-full p-2 border focus:ring-4 focus:border-none  border-mainBlue text-mainBlue rounded bg-white"
                             />
                         </div>
                         <button
                             type="submit"
-                            className="w-72 font-bold bg-tradeRed text-white p-2 rounded"
+                            className="w-72 font-bold bg-mainBlue text-white p-2 rounded"
                         >
                             Verifiy Code
                         </button>
                     </form>
-                </div> : <div className="bg-background rounded-2xl w-[360px] justify-between items-center py-5 h-[700px] flex flex-col shadow-lg shadow-white">
-                    <Image src="/logo.png" alt="" width={130} height={130} priority={true} />
-                    <form onSubmit={(e) => { e.preventDefault(); handleSubmit("code") }} className='flex flex-col justify-center space-y-6 h-full items-center w-[80%]'>
-                        <div className='flex flex-row space-x-2 w-full items-center'>
-                            <div className='border border-white rounded w-16 h-10 flex justify-center items-center' >
-                                <MdEmail color='white' size={20} />
+                </div> :
+                    <div className='h-full w-full flex justify-center items-center'>
+                        <div className="hidden md:flex bg-[#CEBEA5] rounded-l-2xl w-[560px] justify-center items-center py-10 h-[700px] shadow-lg shadow-white">
+                            <Image src={loginimg} alt="" width={500} height={500} priority={true} />
+                        </div>
+                        <div className="bg-white flex rounded-r-2xl rounded-l-2xl md:rounded-r-2xl md:rounded-l-none w-full md:w-[360px] justify-start md:justify-center items-center py-5 h-full md:h-[700px] flex-col shadow-lg shadow-white">
+                            <Image src={loginimg} alt="" width={300} height={300} priority={true} className="flex md:hidden mb-4" />
+                            <form onSubmit={(e) => { e.preventDefault(); handleSubmit("code") }} className='flex flex-col justify-center space-y-6 h-fit items-center w-[80%]'>
+                                <div className='flex flex-row space-x-2 w-full items-center'>
+                                    <div className='border border-mainBlue rounded w-16 h-10 flex justify-center items-center' >
+                                        <MdEmail color='#21749c' size={20} />
+                                    </div>
+                                    <input
+                                        required
+                                        type="email"
+                                        placeholder="Email"
+                                        value={email}
+                                        onChange={handleEmailChange}
+                                        className="w-full p-2 border focus:ring-4 focus:border-none border-mainBlue text-black rounded bg-white"
+                                    />
+                                </div>
+                                <div className='flex flex-row space-x-2 w-full items-center'>
+                                    <div className='border border-mainBlue rounded w-16 h-10 flex justify-center items-center' >
+                                        <FaUser color='#21749c' size={20} />
+                                    </div>
+                                    <input
+                                        required
+                                        type="text"
+                                        placeholder="Name"
+                                        value={username}
+                                        onChange={handleUsernameChange}
+                                        className="w-full p-2 border focus:ring-4 focus:border-none border-mainBlue text-black rounded bg-white"
+                                    />
+                                </div>
+                                <div className='flex flex-row space-x-2 w-full items-center'>
+                                    <div className='border border-mainBlue rounded w-16 h-10 flex justify-center items-center' >
+                                        <RiLockPasswordFill color='#21749c' size={20} />
+                                    </div>
+                                    <input
+                                        required
+                                        minLength="8"
+                                        type="password"
+                                        placeholder="Password"
+                                        value={password}
+                                        onChange={handlePasswordChange}
+                                        className="w-full p-2 border focus:ring-4 focus:border-none border-mainBlue text-black rounded bg-white"
+                                    />
+                                </div>
+                                <div className='flex flex-row space-x-2 w-full items-center'>
+                                    <div className='border border-mainBlue rounded w-16 h-10 flex justify-center items-center' >
+                                        <RiLockPasswordFill color='#21749c' size={20} />
+                                    </div>
+                                    <input
+                                        required
+                                        minLength="8"
+                                        type="password"
+                                        placeholder="Repeat Password"
+                                        value={re_password}
+                                        onChange={handleRepeatPasswordChange}
+                                        className="w-full p-2 border focus:ring-4 focus:border-none border-mainBlue text-black rounded bg-white"
+                                    />
+                                </div>
+                                {/* <ReCAPTCHA
+                                    theme="dark"
+                                    sitekey="6Ldz7M8pAAAAAGEUMmxwvMdm7f5WMzECjUWs3TG3"
+                                    onChange={() => setIsCaptchaSuccess(true)}
+                                /> */}
+                                <button
+                                    // disabled={!isCaptchaSuccessful}
+                                    type="submit"
+                                    className="w-72 font-bold bg-mainBlue text-white p-2 rounded"
+                                >
+                                    Create Account
+                                </button>
+                            </form>
+                            <div className='flex flex-col justify-center items-center mt-5'>
+                                <p className='text-background font-medium'>You have account?</p>
+                                <div className="flex flex-row justify-center items-center space-x-5">
+                                    <Link className='text-white rounded-md font-bold bg-yellow py-1 px-4 mt-2' href="/">Home</Link>
+                                    <Link className='text-white rounded-md font-bold bg-tradeRed py-1 px-4 mt-2' href="/Login">Login</Link>
+                                </div>
                             </div>
-                            <input
-                                required
-                                type="email"
-                                placeholder="Email"
-                                value={email}
-                                onChange={handleEmailChange}
-                                className="w-full p-2 border focus:ring-4 focus:border-none focus:ring-yellow border-white text-white rounded bg-background"
-                            />
                         </div>
-                        <div className='flex flex-row space-x-2 w-full items-center'>
-                            <div className='border border-white rounded w-16 h-10 flex justify-center items-center' >
-                                <FaUser color='white' size={20} />
-                            </div>
-                            <input
-                                required
-                                type="text"
-                                placeholder="Name"
-                                value={username}
-                                onChange={handleUsernameChange}
-                                className="w-full p-2 border focus:ring-4 focus:border-none focus:ring-yellow border-white text-white rounded bg-background"
-                            />
-                        </div>
-                        <div className='flex flex-row space-x-2 w-full items-center'>
-                            <div className='border border-white rounded w-16 h-10 flex justify-center items-center' >
-                                <RiLockPasswordFill color='white' size={20} />
-                            </div>
-                            <input
-                                required
-                                minLength="8"
-                                type="password"
-                                placeholder="Password"
-                                value={password}
-                                onChange={handlePasswordChange}
-                                className="w-full p-2 border border-white focus:ring-4 focus:border-none focus:ring-yellow text-white rounded bg-background"
-                            />
-                        </div>
-                        <div className='flex flex-row space-x-2 w-full items-center'>
-                            <div className='border border-white rounded w-16 h-10 flex justify-center items-center' >
-                                <RiLockPasswordFill color='white' size={20} />
-                            </div>
-                            <input
-                                required
-                                minLength="8"
-                                type="password"
-                                placeholder="Repeat Password"
-                                value={re_password}
-                                onChange={handleRepeatPasswordChange}
-                                className="w-full p-2 border focus:ring-4 focus:border-none focus:ring-yellow border-white text-white rounded bg-background"
-                            />
-                        </div>
-                        <ReCAPTCHA
-                            theme="dark"
-                            sitekey="6Ldz7M8pAAAAAGEUMmxwvMdm7f5WMzECjUWs3TG3"
-                            onChange={() => setIsCaptchaSuccess(true)}
-                        />
-                        <button
-                            disabled={!isCaptchaSuccessful}
-                            type="submit"
-                            className="w-72 font-bold bg-tradeRed text-white p-2 rounded"
-                        >
-                            Create Account
-                        </button>
-                    </form>
-                    <div className='flex flex-col justify-center items-center '>
-                        <p className='text-white font-medium'>You have account?</p>
-                        <div className="flex flex-row justify-center items-center space-x-5">
-                            <Link className='text-background rounded-md font-bold bg-white py-1 px-4 mt-2' href="/">Home</Link>
-                            <Link className='text-background rounded font-bold bg-tradeGreen py-1 px-4 mt-2' href="/Login">Login</Link>
-                        </div>
-                    </div>
-                </div>}
+                    </div>}
             </div>
             {
                 showMessage && <div className='fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
@@ -201,4 +208,5 @@ export default function RegistrationForm() {
             }
         </div>
     )
+
 };

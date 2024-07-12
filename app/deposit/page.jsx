@@ -72,28 +72,28 @@ export default function Deposit() {
                     </Link>
                 </div>
                 <div className="grid gap-4 grid-cols-2">
-                    <button onClick={() => { setType('USDT (BEP20)'); SetWallet("0xd14d911b2cb8bde775d9458b5377623c1e2d9bc1") }} className={type === "USDT (BEP20)" ? "p-3 border-2 border-black text-black rounded-xl flex flex-row justify-center items-center space-x-1 bg-tradeGreen" : "p-3 border-2 border-black text-black rounded-xl flex flex-row justify-center items-center space-x-1"}>
-                        <SiTether size={30} color="black" />
+                    <button onClick={() => { setType('USDT (BEP20)'); SetWallet("0xd14d911b2cb8bde775d9458b5377623c1e2d9bc1") }} className={type === "USDT (BEP20)" ? "p-3 border-2 border-black text-white rounded-xl flex flex-row justify-center items-center space-x-1 bg-mainBlue" : "p-3 border-2 border-black text-black rounded-xl flex flex-row justify-center items-center space-x-1"}>
+                        <SiTether size={30} />
                         <p className="font-bold">USDT (BEP20)</p>
                     </button>
-                    <button onClick={() => { setType('USDT (TRC20)'); SetWallet("TTRZ4syRd7LdseNTJXJwVEjDXcGEtBZhFs") }} className={type === "USDT (TRC20)" ? "p-3 border-2 border-black text-black rounded-xl flex flex-row justify-center items-center space-x-1 bg-tradeGreen" : "p-3 border-2 border-black text-black rounded-xl flex flex-row justify-center items-center space-x-1"}>
-                        <SiTether size={30} color="black" />
+                    <button onClick={() => { setType('USDT (TRC20)'); SetWallet("TTRZ4syRd7LdseNTJXJwVEjDXcGEtBZhFs") }} className={type === "USDT (TRC20)" ? "p-3 border-2 border-black text-white rounded-xl flex flex-row justify-center items-center space-x-1 bg-mainBlue" : "p-3 border-2 border-black text-black rounded-xl flex flex-row justify-center items-center space-x-1"}>
+                        <SiTether size={30} />
                         <p className="font-bold">USDT (TRC20)</p>
                     </button>
-                    <button onClick={() => { setType('BNB (BEP20)'); SetWallet("0xd14d911b2cb8bde775d9458b5377623c1e2d9bc1") }} className={type === "BNB (BEP20)" ? "p-3 border-2 border-black text-black rounded-xl flex flex-row justify-center items-center space-x-1 bg-tradeGreen" : "p-3 border-2 border-black text-black rounded-xl flex flex-row justify-center items-center space-x-1"}>
+                    <button onClick={() => { setType('BNB (BEP20)'); SetWallet("0xd14d911b2cb8bde775d9458b5377623c1e2d9bc1") }} className={type === "BNB (BEP20)" ? "p-3 border-2 border-black text-white rounded-xl flex flex-row justify-center items-center space-x-1 bg-mainBlue" : "p-3 border-2 border-black text-black rounded-xl flex flex-row justify-center items-center space-x-1"}>
                         <Image src={bnb} alt="" width={30} height={30} />
                         <p className="font-bold">BNB (BEP20)</p>
                     </button>
-                    <button onClick={() => { setType('ETH (ERC20)'); SetWallet("0xd14d911b2cb8bde775d9458b5377623c1e2d9bc1") }} className={type === "ETH (ERC20)" ? "p-3 border-2 border-black text-black rounded-xl flex flex-row justify-center items-center space-x-1 bg-tradeGreen" : "p-3 border-2 border-black text-black rounded-xl flex flex-row justify-center items-center space-x-1"}>
-                        <SiEthereum size={30} color="black" />
+                    <button onClick={() => { setType('ETH (ERC20)'); SetWallet("0xd14d911b2cb8bde775d9458b5377623c1e2d9bc1") }} className={type === "ETH (ERC20)" ? "p-3 border-2 border-black text-white rounded-xl flex flex-row justify-center items-center space-x-1 bg-mainBlue" : "p-3 border-2 border-black text-black rounded-xl flex flex-row justify-center items-center space-x-1"}>
+                        <SiEthereum size={30} />
                         <p className="font-bold">ETH (ERC20)</p>
                     </button>
-                    <button onClick={() => { setType('SHIB (ERC20)'); SetWallet("0xd14d911b2cb8bde775d9458b5377623c1e2d9bc1") }} className={type === "SHIB (ERC20)" ? "p-3 border-2 border-black text-black rounded-xl flex flex-row justify-center items-center space-x-1 bg-tradeGreen" : "p-3 border-2 border-black text-black rounded-xl flex flex-row justify-center items-center space-x-1"}>
+                    <button onClick={() => { setType('SHIB (ERC20)'); SetWallet("0xd14d911b2cb8bde775d9458b5377623c1e2d9bc1") }} className={type === "SHIB (ERC20)" ? "p-3 border-2 border-black text-white rounded-xl flex flex-row justify-center items-center space-x-1 bg-mainBlue" : "p-3 border-2 border-black text-black rounded-xl flex flex-row justify-center items-center space-x-1"}>
                         <Image src={shib} alt="" width={30} height={30} />
                         <p className="font-bold">SHIB (ERC20)</p>
                     </button>
-                    <button onClick={() => { setType('Doge (DOGE)'); SetWallet("DEjgMqtzVuXhxVD4LmAi2FjqwBab1ibdwm") }} className={type === "Doge (DOGE)" ? "p-3 border-2 rounded-xl border-black text-black flex flex-row justify-center items-center space-x-1 bg-tradeGreen" : "p-3 border-2 rounded-xl border-black text-black flex flex-row justify-center items-center space-x-1"}>
-                        <SiDogecoin size={30} color="black" />
+                    <button onClick={() => { setType('Doge (DOGE)'); SetWallet("DEjgMqtzVuXhxVD4LmAi2FjqwBab1ibdwm") }} className={type === "Doge (DOGE)" ? "p-3 border-2 rounded-xl border-black text-white flex flex-row justify-center items-center space-x-1 bg-mainBlue" : "p-3 border-2 rounded-xl border-black text-black flex flex-row justify-center items-center space-x-1"}>
+                        <SiDogecoin size={30} />
                         <p className="font-bold">Doge (DOGE)</p>
                     </button>
                 </div>
@@ -109,7 +109,7 @@ export default function Deposit() {
                         onChange={handleSetTetherAmount}
                         className="w-full p-2 rounded-lg  text-black font-bold bg-white border"
                     />
-                    <button type="submit" className="bg-tradeRed text-white rounded-xl w-full py-4 font-bold text-xl">
+                    <button type="submit" className="bg-mainBlue text-white rounded-xl w-full py-4 font-bold text-xl">
                         Submit
                     </button>
                 </form>

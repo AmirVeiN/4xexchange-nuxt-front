@@ -6,7 +6,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import { FaBan } from "react-icons/fa";
 import { MdAdminPanelSettings } from "react-icons/md";
 import { GiShieldDisabled } from "react-icons/gi";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from 'react';
 import logo2 from "../../public/logo.png"
 import { resetPassword, createTicket, allTickets, logout, getUser, GetChartDetail, ClientTicketAnswer, GetSellAndBuyClient, clientWithdrawsList, DepositHistoryClient, withdrawEmail, withdrawEmailConfirmation } from "../GlobalRedux/Features/userSlice";
 import { toast } from 'sonner';
@@ -35,6 +35,12 @@ import { FaCreditCard } from "react-icons/fa";
 import { RiBankFill } from "react-icons/ri";
 import { MdWorkHistory } from "react-icons/md";
 import Image from "next/image";
+import { FaHome } from "react-icons/fa";
+import { FaUserEdit } from "react-icons/fa";
+import { SiBitcoincash } from "react-icons/si";
+import { HiTicket } from "react-icons/hi2";
+import { GiMoneyStack } from "react-icons/gi";
+import { FaHandshake } from "react-icons/fa";
 
 export default function Pannel() {
 
@@ -79,17 +85,58 @@ export default function Pannel() {
     const dispatch = useDispatch();
 
     const data = useSelector((state) => state.user.user)
-    const price = useSelector((state) => state.user.price)
     const tickets = useSelector((state) => state.user.tickets)
     const depositHistory = useSelector((state) => state.user.paymentsClient)
     const WithdrawHistory = useSelector((state) => state.user.clientWithdrawsList)
     const SellAndBuy = useSelector((state) => state.user.SellAndBuyClient)
+    const [response, setResponse] = useState([]);
+    const [lastPrice, setPrice] = useState(null);
+    const socket = useRef(null);
+
+    useEffect(() => {
+
+        socket.current = new WebSocket('ws://localhost:8000/ws/some_path/');
+
+        socket.current.onopen = () => {
+            console.log('WebSocket is open now.');
+            socket.current.send(JSON.stringify({ request: "chart", keyword: "price" }));
+        };
+
+        socket.current.onclose = () => {
+            console.log('WebSocket is closed now.');
+        };
+
+        socket.current.onmessage = (event) => {
+            const data = JSON.parse(event.data);
+            setPrice(data.close)
+            if (data.error) {
+                console.error(data.error);
+                return;
+            }
+        };
+
+        return () => {
+            if (socket.current) {
+                socket.current.close();
+            }
+        };
+    }, []);
+
 
     useEffect(() => {
         if (!data) {
             dispatch(getUser());
         }
-    }, [dispatch,data]);
+        if (!tickets) {
+            dispatch(allTickets());
+        }
+        if (!depositHistory) {
+            dispatch(DepositHistoryClient());
+        }
+        if (!WithdrawHistory) {
+            dispatch(clientWithdrawsList());
+        }
+    }, []);
 
     useEffect(() => {
 
@@ -108,54 +155,10 @@ export default function Pannel() {
             return () => clearInterval(intervalId);
         }
 
-    }, [change , activeButton]);
-
-    useEffect(() => {
-
-        if (!tickets) {
-            dispatch(allTickets());
-        }
-    }, [tickets, dispatch]);
-
-    useEffect(() => {
-
-        if (!price) {
-            dispatch(GetChartDetail());
-        }
-    }, [price, dispatch]);
-
-    useEffect(() => {
-
-        if (!depositHistory) {
-            dispatch(DepositHistoryClient());
-        }
-    }, [depositHistory, dispatch]);
-
-    useEffect(() => {
-
-        if (!WithdrawHistory) {
-            dispatch(clientWithdrawsList());
-        }
-    }, [WithdrawHistory, dispatch]);
-
-
-    useEffect(() => {
-        const isDark = localStorage.getItem('darkMode') === 'true';
-        setDarkMode(isDark);
     }, []);
 
-    useEffect(() => {
-        if (darkMode) {
-            document.documentElement.classList.add('dark');
-            localStorage.setItem('darkMode', true);
-        } else {
-            document.documentElement.classList.remove('dark');
-            localStorage.setItem('darkMode', false);
-        }
-    }, [darkMode]);
 
-
-    if (!data || !tickets || !depositHistory || !WithdrawHistory || !price) {
+    if (!data || !tickets || !depositHistory || !WithdrawHistory || !lastPrice) {
 
         return <LoadingPage />;
 
@@ -274,7 +277,7 @@ export default function Pannel() {
 
 
     return (
-        <div className="relative mb-[85px] md:mb-0 grow min-h-screen bg-white dark:bg-background">
+        <div className="relative grow min-h-screen bg-white dark:bg-background pb-48 md:pb-0 pt-0 md:pt-24">
             <div className={!showMessage ? "w-full h-full flex flex-row space-x-0 md:space-x-2 justify-center items-start" : "blur-md w-full h-full flex flex-row space-x-0 md:space-x-2 justify-center items-start"}>
                 <div className="3xl:flex 2xl:flex xl:hidden md:hidden lg:hidden sm:hidden ph:hidden bg-softGray m-5 w-[220px] h-[778px] rounded-3xl flex-col justify-between pb-5 items-center">
                     <div className="w-full flex flex-col items-center ">
@@ -283,23 +286,23 @@ export default function Pannel() {
                         </div>
                         <Image src="/Line.png" className="pb-4" alt="" width={200} height={2} />
                         <div className="space-y-4 flex flex-col w-[85%] mr-16 ">
-                            <button onClick={() => setActiveButton("Profile")} className={activeButton === "Profile" ? `pt-1 delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center  bg-tradeRed` : `pt-1 delay-150 duration-300 ease-in-out flex flex-row pl-8 space-x-3 items-center`}>
+                            <button onClick={() => setActiveButton("Profile")} className={activeButton === "Profile" ? `pt-1 delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center  bg-mainBlue` : `pt-1 delay-150 duration-300 ease-in-out flex flex-row pl-8 space-x-3 items-center`}>
                                 <FaUserCircle color="white" size={20} />
                                 <p className="text-white text-lg">Profile</p>
                             </button>
-                            <button onClick={() => setActiveButton("Security")} className={activeButton === "Security" ? ` delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center  bg-tradeRed` : ` delay-150 duration-300 ease-in-out flex flex-row pl-8 space-x-3 items-center`}>
+                            <button onClick={() => setActiveButton("Security")} className={activeButton === "Security" ? ` delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center  bg-mainBlue` : ` delay-150 duration-300 ease-in-out flex flex-row pl-8 space-x-3 items-center`}>
                                 <MdSecurity color="white" size={20} />
                                 <p className="text-white text-lg">Security</p>
                             </button>
-                            <button onClick={() => setActiveButton("Payments")} className={activeButton === "Payments" ? ` delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center  bg-tradeRed` : ` delay-150 duration-300 ease-in-out flex flex-row pl-8 space-x-3 items-center`}>
+                            <button onClick={() => setActiveButton("Payments")} className={activeButton === "Payments" ? ` delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center  bg-mainBlue` : ` delay-150 duration-300 ease-in-out flex flex-row pl-8 space-x-3 items-center`}>
                                 <MdOutlinePayments color="white" size={20} />
                                 <p className="text-white text-lg">Payments</p>
                             </button>
-                            <button onClick={() => setActiveButton("Ticket")} className={activeButton === "Ticket" ? ` delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center  bg-tradeRed` : ` delay-150 duration-300 ease-in-out flex flex-row pl-8 space-x-3 items-center`}>
+                            <button onClick={() => setActiveButton("Ticket")} className={activeButton === "Ticket" ? ` delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center  bg-mainBlue` : ` delay-150 duration-300 ease-in-out flex flex-row pl-8 space-x-3 items-center`}>
                                 <BiSupport color="white" size={20} />
                                 <p className="text-white text-lg">Ticket</p>
                             </button>
-                            <button onClick={() => { setActiveButton("SellAndBuy"); dispatch(GetSellAndBuyClient({ id: data.id })) }} className={activeButton === "SellAndBuy" ? ` delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center  bg-tradeRed` : ` delay-150 duration-300 ease-in-out flex flex-row pl-8 space-x-3 items-center`}>
+                            <button onClick={() => { setActiveButton("SellAndBuy"); dispatch(GetSellAndBuyClient({ id: data.id })) }} className={activeButton === "SellAndBuy" ? ` delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center  bg-mainBlue` : ` delay-150 duration-300 ease-in-out flex flex-row pl-8 space-x-3 items-center`}>
                                 <FaSackDollar color="white" size={20} />
                                 <p className="text-white text-lg">Sell & Buy</p>
                             </button>
@@ -317,12 +320,79 @@ export default function Pannel() {
                         </div>
                     </div>
                 </div>
-                <div className="3xl:hidden 2xl:hidden xl:flex md:flex lg:flex sm:flex ph:flex items-center justify-between">
-                    <div className="bg-yellowBorder/50 rounded-xl p-1 fixed top-3 left-3 z-50">
-                        <button onClick={() => setIsOpen(!isOpen)}>
-                            {isOpen ? <CgMenuMotion size={35} color="black" /> : <BiMenu size={35} color="black" />}
-                        </button>
+                <div className="flex md:hidden fixed bottom-[117px] w-[90%] bg-white rounded-lg shadow-lg-light2 shadow-mainBlue justify-between items-center p-4 z-40">
+                    <button
+                        onClick={() => setActiveButton("Profile")}
+                    >
+                        {activeButton === "Profile" ?
+                            <div className="flex flex-col justify-center items-center">
+                                <FaUserEdit color="#21749c" size={25} />
+                                <p className="font-bold text-xs text-mainBlue">Profile</p>
+                            </div> :
+                            <div className="flex flex-col justify-center items-center">
+                                <FaUserEdit size={25} color="gray" />
+                                <p className="font-bold text-xs text-gray">Profile</p>
+                            </div>
+                        }
+                    </button>
+                    <button
+                        onClick={() => setActiveButton("Security")}
+                    >
+                        {activeButton === "Security" ?
+                            <div className="flex flex-col justify-center items-center">
+                                <MdSecurity color="#21749c" size={25} />
+                                <p className="font-bold text-xs text-mainBlue">Security</p>
+                            </div> :
+                            <div className="flex flex-col justify-center items-center">
+                                <MdSecurity size={25} color="gray" />
+                                <p className="font-bold text-xs text-gray">Security</p>
+                            </div>
+                        }
+                    </button>
+                    <div
+                        onClick={() => setActiveButton("Payments")}
+                    >
+                        {activeButton === "Payments" ?
+                            <div className="flex flex-col justify-center items-center">
+                                <SiBitcoincash color="#21749c" size={25} />
+                                <p className="font-bold text-xs text-mainBlue">Payments</p>
+                            </div> :
+                            <div className="flex flex-col justify-center items-center">
+                                <SiBitcoincash size={25} color="gray" />
+                                <p className="font-bold text-xs text-gray">Payments</p>
+                            </div>
+                        }
                     </div>
+                    <div
+                        onClick={() => setActiveButton("Ticket")}
+                    >
+                        {activeButton === "Ticket" ?
+                            <div className="flex flex-col justify-center items-center">
+                                <HiTicket color="#21749c" size={25} />
+                                <p className="font-bold text-xs text-mainBlue">Ticket</p>
+                            </div> :
+                            <div className="flex flex-col justify-center items-center">
+                                <HiTicket size={25} color="gray" />
+                                <p className="font-bold text-xs text-gray">Ticket</p>
+                            </div>
+                        }
+                    </div>
+                    <div
+                        onClick={() => { setActiveButton("SellAndBuy"); dispatch(GetSellAndBuyClient({ id: data.id })) }}
+                    >
+                        {activeButton === "SellAndBuy" ?
+                            <div className="flex flex-col justify-center items-center">
+                                <FaHandshake color="#21749c" size={25} />
+                                <p className="font-bold text-xs text-mainBlue">Sell & Buy</p>
+                            </div> :
+                            <div className="flex flex-col justify-center items-center">
+                                <FaHandshake size={25} color="gray" />
+                                <p className="font-bold text-xs text-gray">Sell & Buy</p>
+                            </div>
+                        }
+                    </div>
+                </div>
+                {/* <div className="3xl:hidden 2xl:hidden xl:flex md:flex lg:flex sm:flex ph:flex items-center justify-center">
                     {isOpen && (
                         <div className="fixed top-0 left-0 flex bg-softGray w-[220px] h-full flex-col justify-between items-center rounded-r-3xl">
                             <div className="w-full flex flex-col items-center ">
@@ -366,12 +436,12 @@ export default function Pannel() {
                             </div>
                         </div>
                     )}
-                </div>
+                </div> */}
                 <div className="max-w-[1195px] w-full h-full pb-5 mb-10 mt-5 flex flex-col space-y-2 bg-back dark:bg-gray2 rounded-3xl">
                     <div className="hidden md:flex flex-col md:flex-row md:space-y-0 space-y-5 p-1 md:p-5">
                         <div className="min-w-[218px] h-[72px] bg-white dark:bg-background shadow-lg rounded-2xl justify-center md:justify-start items-center flex md:rounded-br-[90px] md:rounded-tr-md">
                             <div className="flex flex-row justify-start pl-4 pt-1 items-center space-x-4">
-                                <FaUserCircle size={45} color="red" />
+                                <FaUserCircle size={45} color="#21749c" />
                                 <div className="flex flex-col justify-center items-start">
                                     <p className="font-medium text-background dark:text-white">{data.username}</p>
                                     <p className="font-medium text-background dark:text-white">4xExChange</p>
@@ -380,12 +450,9 @@ export default function Pannel() {
                         </div>
                         <div className="max-w-[961px] w-full h-[72px] shadow-lg items-center bg-white dark:bg-background rounded-2xl p-3 md:pl-10 md:pr-4 md:rounded-tl-[90px] md:rounded-bl-md flex flex-row justify-center md:justify-end">
                             <div className="flex flex-row space-x-1 md:space-x-5 items-center">
-                                <button onClick={() => setDarkMode(!darkMode)} className="bg-back dark:bg-gray2 shadow-inner p-4 rounded-xl ">
-                                    {!darkMode ? <MdLightMode color="#feb72f" size={25} /> : <MdDarkMode color="white" size={25} />}
-                                </button>
                                 <div className="bg-back dark:bg-gray2 shadow-inner px-3 py-3 rounded-xl flex flex-row justify-center items-center space-x-1">
                                     <p className="text-sm md:text-base font-bold text-background dark:text-white">Version</p>
-                                    <p className="bg-tradeRed text-white rounded-xl px-2 py-1 text-xs md:text-sm font-bold">3.1.4</p>
+                                    <p className="bg-mainBlue text-white rounded-xl px-2 py-1 text-xs md:text-sm font-bold">3.1.4</p>
                                 </div>
                                 <div className="bg-back dark:bg-gray2 shadow-inner px-4 py-2 rounded-xl flex flex-col justify-center items-center space-y-1">
                                     <div className="text-xs md:text-sm text-background dark:text-white font-medium">
@@ -467,41 +534,41 @@ export default function Pannel() {
                     {activeButton === "Profile" && <div className="flex md:hidden m-2 bg-white dark:bg-background rounded-3xl shadow-lg flex-col divide-y-2 divide-softBlue/20 p-5">
                         <div className="flex flex-row justify-center items-center space-x-1">
                             <Image src={logo2} alt="" width={50} height={50} />
-                            <p className="font-black text-xl text-black dark:text-white">4xExChange</p>
+                            <p className="font-black text-xl text-mainBlue dark:text-white">4xExChange</p>
                         </div>
                     </div>}
 
                     {activeButton === "Profile" && <div className="flex md:hidden m-2 bg-white dark:bg-background rounded-3xl shadow-lg flex-col divide-y-2 divide-softBlue/20 p-5">
                         <div className="flex flex-row justify-between items-center">
                             <div className="flex flex-row space-x-2 justify-center items-center">
-                                <SlWallet color="gray" size={20} />
-                                <p className="font-bold text-black dark:text-white">Main Wallet</p>
+                                <SlWallet color="#21749c" size={20} />
+                                <p className="font-bold text-mainBlue dark:text-white">Main Wallet</p>
                             </div>
-                            <p className="font-bold text-black dark:text-white">{(data.usdt + (data.token * price.price.number)).toString().substring(0, 10)}</p>
+                            <p className="font-bold text-mainBlue dark:text-white">{(data.usdt + (data.token * lastPrice)).toString().substring(0, 10)}</p>
                         </div>
                     </div>}
 
                     {activeButton === "Profile" && <div className="flex md:hidden m-2 bg-white dark:bg-background rounded-3xl shadow-lg flex-col divide-y-2 divide-softBlue/20 p-2 py-5">
                         <div className="flex flex-row items-center justify-around">
                             <Link href="/deposit" className="flex flex-col space-y-2 justify-center items-center">
-                                <div className="p-3 rounded-full bg-silver"><PiArrowDownBold size={20} color="black" /></div>
-                                <p className="font-bold text-black dark:text-white">Deposit</p>
+                                <div className="p-3 rounded-full bg-mainBlue"><PiArrowDownBold size={20} color="white" /></div>
+                                <p className="font-bold text-mainBlue dark:text-white">Deposit</p>
                             </Link>
                             <button onClick={() => setChange("Withdraw")} className="flex flex-col space-y-2 justify-center items-center">
-                                <div className="p-3 rounded-full bg-silver"><PiArrowUpBold size={20} color="black" /></div>
-                                <p className="font-bold text-black dark:text-white">Withdraw</p>
+                                <div className="p-3 rounded-full bg-mainBlue"><PiArrowUpBold size={20} color="white" /></div>
+                                <p className="font-bold text-mainBlue dark:text-white">Withdraw</p>
                             </button>
                             <Link href="/trading" className="flex flex-col space-y-2 justify-center items-center">
-                                <div className="p-3 rounded-full bg-silver"><FaCreditCard size={20} color="black" /></div>
-                                <p className="font-bold text-black dark:text-white">Buy</p>
+                                <div className="p-3 rounded-full bg-mainBlue"><FaCreditCard size={20} color="white" /></div>
+                                <p className="font-bold text-mainBlue dark:text-white">Buy</p>
                             </Link>
                             <Link href='/trading' className="flex flex-col space-y-2 justify-center items-center">
-                                <div className="p-3 rounded-full bg-silver"><RiBankFill size={20} color="black" /></div>
-                                <p className="font-bold text-black dark:text-white">Sell</p>
+                                <div className="p-3 rounded-full bg-mainBlue"><RiBankFill size={20} color="white" /></div>
+                                <p className="font-bold text-mainBlue dark:text-white">Sell</p>
                             </Link>
                             <button onClick={() => setActiveButton("SellAndBuy")} className="flex flex-col space-y-2 justify-center items-center">
-                                <div className="p-3 rounded-full bg-silver"><MdWorkHistory size={20} color="black" /></div>
-                                <p className="font-bold text-black dark:text-white">History</p>
+                                <div className="p-3 rounded-full bg-mainBlue"><MdWorkHistory size={20} color="white" /></div>
+                                <p className="font-bold text-mainBlue dark:text-white">History</p>
                             </button>
                         </div>
                     </div>}
@@ -525,12 +592,12 @@ export default function Pannel() {
                                 <Image src={coin} alt="" width={40} height={40} />
                                 <div className="flex flex-col ">
                                     <p className="text-black font-bold dark:text-white">4x</p>
-                                    <p className="text-gray">${(price.price.number).toString().substring(0, 10)}</p>
+                                    <p className="text-gray">${(lastPrice).toString().substring(0, 10)}</p>
                                 </div>
                             </div>
                             <div className="flex flex-col justify-center items-end">
                                 <p className="text-black font-bold dark:text-white">{(data.token).toString().substring(0, 10)}</p>
-                                <p className="text-gray">${(data.token * price.price.number).toString().substring(0, 10)}</p>
+                                <p className="text-gray">${(data.token * lastPrice).toString().substring(0, 10)}</p>
                             </div>
                         </div>
                     </div>}
@@ -584,8 +651,8 @@ export default function Pannel() {
                             </div>
                         </div>
                         <div className="flex flex-col space-y-4 justify-center items-center py-5">
-                            <p className="shadow-inner shadow-tradeGreen rounded-lg text-softBlue font-bold bg-back w-full text-center p-2">Your received Tether will have a Tether fee</p>
-                            <p className="shadow-inner rounded-lg text-softBlue font-bold shadow-tradeGreen bg-back w-full text-center p-2">Your Tether is = {data.usdt}</p>
+                            <p className="shadow-inner shadow-mainBlue rounded-lg text-softBlue font-bold bg-back w-full text-center p-2">Your received Tether will have a Tether fee</p>
+                            <p className="shadow-inner rounded-lg text-softBlue font-bold shadow-mainBlue bg-back w-full text-center p-2">Your Tether is = {data.usdt}</p>
                             <div className="flex flex-row w-full justify-center items-center space-x-5">
                                 <p className="shadow-inner rounded-lg text-softBlue font-bold bg-back w-fit  p-2">amount</p>
                                 <input
@@ -594,7 +661,7 @@ export default function Pannel() {
                                     type="number"
                                     value={withdraw}
                                     onChange={handleWithdraw}
-                                    className="w-full p-2 rounded-lg text-black font-bold bg-back shadow-inner shadow-background"
+                                    className="w-full p-2 rounded-lg text-black font-bold bg-back shadow-inner shadow-mainBlue"
                                 />
                             </div>
                             <div className="flex flex-row w-full justify-center items-center space-x-5">
@@ -604,12 +671,12 @@ export default function Pannel() {
                                     type="text"
                                     value={wallet}
                                     onChange={handleWallet}
-                                    className="w-full p-2 rounded-lg text-black font-bold bg-back shadow-inner shadow-background"
+                                    className="w-full p-2 rounded-lg text-black font-bold bg-back shadow-inner shadow-mainBlue"
                                 />
                             </div>
                         </div>
                         <div className="flex justify-center items-center pt-5">
-                            <button type="submit" className="text-white bg-red font-bold px-4 py-2 rounded-xl shadow-md shadow-background">
+                            <button type="submit" className="text-white bg-mainBlue font-bold px-4 py-2 rounded-xl shadow-md shadow-background">
                                 Submit
                             </button>
                         </div>
@@ -653,7 +720,7 @@ export default function Pannel() {
                             </div>
                         </div>
                         <div className="flex flex-row justify-around items-center pt-5">
-                            <button onClick={() => setChange("Password")} className="px-4 py-2 bg-back rounded-xl shadow-md font-bold text-background shadow-background">Change Password</button>
+                            <button onClick={() => setChange("Password")} className="px-4 py-2 bg-mainBlue rounded-xl shadow-md font-bold text-white shadow-background">Change Password</button>
                         </div>
                     </div>}
                     {change === "Password" && activeButton === "Security" && <form onSubmit={(e) => { e.preventDefault(); handleSubmit("password"); }} className="m-5 bg-white dark:bg-background rounded-3xl shadow-lg flex flex-col divide-y-2 divide-softBlue/20 p-5 ">
@@ -664,18 +731,18 @@ export default function Pannel() {
                             </div>
                         </div>
                         <div className="flex flex-row space-x-4 justify-around items-center py-5">
-                            <p className="shadow-inner rounded-lg text-softBlue font-bold bg-back w-72 p-2">Enter the Current Password</p>
+                            <p className="shadow-inner rounded-lg text-softBlue font-bold text-sm bg-back w-72 p-2">Enter the Current Password</p>
                             <input
                                 required
                                 type="password"
                                 placeholder="Current Password"
                                 value={currentPassword}
                                 onChange={handleCurrentPasswordChange}
-                                className="w-full p-2 rounded-lg text-black font-bold bg-back shadow-inner"
+                                className="w-full p-2 rounded-lg text-black text-sm font-bold bg-back shadow-inner"
                             />
                         </div>
                         <div className="flex flex-row space-x-4 justify-around items-center py-5">
-                            <p className="shadow-inner rounded-lg text-softBlue font-bold bg-back w-72 p-2">Enter the New Password</p>
+                            <p className="shadow-inner rounded-lg text-softBlue text-sm font-bold bg-back w-72 p-2">Enter the New Password</p>
                             <input
                                 minLength="8"
                                 required
@@ -683,11 +750,11 @@ export default function Pannel() {
                                 placeholder="Password"
                                 value={password}
                                 onChange={handlePasswordChange}
-                                className="w-full p-2 rounded-lg text-black font-bold bg-back shadow-inner"
+                                className="w-full p-2 rounded-lg text-black text-sm font-bold bg-back shadow-inner"
                             />
                         </div>
                         <div className="flex flex-row space-x-4 justify-around items-center py-5">
-                            <p className="shadow-inner rounded-lg text-softBlue font-bold bg-back w-72 p-2">Enter the Re new Password</p>
+                            <p className="shadow-inner rounded-lg text-softBlue text-sm font-bold bg-back w-72 p-2">Enter the Re new Password</p>
                             <input
                                 minLength="8"
                                 required
@@ -695,11 +762,11 @@ export default function Pannel() {
                                 placeholder="Repeat Password"
                                 value={re_password}
                                 onChange={handleRePasswordChange}
-                                className="w-full p-2 rounded-lg text-black font-bold bg-back shadow-inner"
+                                className="w-full p-2 rounded-lg text-sm text-black font-bold bg-back shadow-inner"
                             />
                         </div>
                         <div className="flex justify-center items-center pt-5">
-                            <button type="submit" className="text-white bg-red font-bold px-4 py-2 rounded-xl shadow-md shadow-background">
+                            <button type="submit" className="text-white bg-mainBlue font-bold px-4 py-2 rounded-xl shadow-md shadow-background">
                                 Submit
                             </button>
                         </div>
@@ -756,7 +823,7 @@ export default function Pannel() {
                         </div> : <div className="overflow-y-auto divide-y-2 divide-tradeRed">
                             {depositHistory.slice().reverse().map((e, index) => {
                                 return (
-                                    <div key={index} className="flex flex-col justify-around space-y-1 py-3 mt-1 items-center ">
+                                    <div key={index} className="flex flex-col justify-around space-y-1 py-3 mt-1 items-start ">
                                         <p className="text-tradeGreen font-bold text-center">{e.crypto_type}</p>
                                         <p className="text-gray dark:text-white font-bold text-center">{e.tether}</p>
                                         <p className="text-gray dark:text-white font-bold text-sm text-center">{e.wallet}</p>
@@ -820,7 +887,7 @@ export default function Pannel() {
                         </div> : <div className="overflow-y-auto divide-y-2 divide-tradeGreen">
                             {WithdrawHistory.slice().reverse().map((e, index) => {
                                 return (
-                                    <div key={index} className="flex flex-col justify-center py-3 mt-1 space-y-1 items-center">
+                                    <div key={index} className="flex flex-col justify-center py-3 mt-1 space-y-1 items-start">
                                         <p className="text-tradeRed font-bold text-center">{e.tether}</p>
                                         <p className="text-gray dark:text-white font-bold text-center">{e.time}</p>
                                         <p className="text-gray dark:text-white font-bold text-sm text-center">{e.wallet}</p>
@@ -894,15 +961,16 @@ export default function Pannel() {
                         </div> : <div className="overflow-y-auto divide-y-2 divide-tradeGreen">
                             {tickets.slice().reverse().map((e, index) => {
                                 return (
-                                    <div key={index} className="flex flex-col justify-center space-y-2 py-3 mt-1 items-center">
-                                        <p className="text-gray dark:text-white w-[150px] text-center">{e.title.substring(0, 15)}</p>
-                                        <p className="text-gray dark:text-white w-[300px] text-center">{e.description.substring(0, 30)}</p>
-                                        <p className="text-gray dark:text-white w-[150px] text-center">{e.date_created.split(":")[0].substring(0, 10)}</p>
-                                        <div className="w-[150px]">{(e.ticket_status === "Pending" && <div className="flex justify-center items-center space-x-1 bg-yellow rounded-md px-2 py-1"><p className="text-white font-bold">Pending</p></div>) ||
+                                    <div key={index} className="flex flex-col justify-center space-y-2 py-3 mt-1 items-center ">
+                                        <p className="text-gray dark:text-white w-full text-left">{e.title.substring(0, 15)}</p>
+                                        <p className="text-gray dark:text-white w-full text-left">{e.description.substring(0, 30)}</p>
+                                        <p className="text-gray dark:text-white w-full text-left">{e.date_created.split(":")[0].substring(0, 10)}</p>
+                                        <div className="w-[150px]">{(e.ticket_status === "Pending" && <div className="flex justify-center items-center space-x-1 bg-yellow rounded-md px-2 py-2"><p className="text-white font-bold">Pending</p></div>) ||
                                             (e.ticket_status === "Completed" && <div className="flex justify-center items-center space-x-1 bg-red rounded-md px-2 py-1"><p className="text-white font-bold">Completed</p></div>)
                                             || (e.ticket_status === "Active" && <div className="flex justify-center items-center space-x-1 bg-Green rounded-md px-2 py-1"><p className="text-white font-bold">Active</p></div>)}</div>
-                                        <div className="w-[150px] flex justify-center items-center">
-                                            <button onClick={() => setTicketDetail(e)} className="p-2 justify-center w-[60px] items-center flex bg-red rounded-md">
+                                        <div className="w-[155px] flex justify-center items-center">
+                                            <button onClick={() => setTicketDetail(e)} className="p-2 px-3 justify-center space-x-2 items-center flex bg-mainBlue rounded-md">
+                                                <p className="font-black text-lg">Open Ticket</p>
                                                 <FaPen color="white" size={15} />
                                             </button>
                                         </div>
@@ -921,7 +989,7 @@ export default function Pannel() {
                             </div>
                         </div>
                         <div className="flex flex-row justify-around items-center pt-5">
-                            <button onClick={() => setChange("CreateTicket")} className="px-4 py-2 bg-back rounded-xl shadow-md font-bold text-background shadow-background">CreateTicket</button>
+                            <button onClick={() => setChange("CreateTicket")} className="px-4 py-2 bg-mainBlue rounded-xl shadow-md font-bold text-white shadow-background">CreateTicket</button>
                         </div>
                     </div>}
                     {change === "CreateTicket" && activeButton === "Ticket" && <form onSubmit={(e) => { e.preventDefault(); handleSubmit("CreateTicket"); }} className="m-2 md:m-5 bg-white dark:bg-background rounded-3xl shadow-lg flex flex-col divide-y-2 divide-softBlue/20 p-5 ">
@@ -956,7 +1024,7 @@ export default function Pannel() {
                             />
                         </div>
                         <div className="flex justify-center items-center pt-5">
-                            <button type="submit" className="text-white bg-red font-bold px-4 py-2 rounded-xl shadow-md shadow-background">
+                            <button type="submit" className="text-white bg-mainBlue font-bold px-4 py-2 rounded-xl shadow-md shadow-background">
                                 Submit
                             </button>
                         </div>
@@ -1070,10 +1138,10 @@ export default function Pannel() {
                         {!SellAndBuy || SellAndBuy.buy.length === 0 ? <div className="flex h-full flex-row justify-center items-center space-x-5">
                             <FaBoxArchive size={50} color="#7790A6" />
                             <p className="text-xl font-bold text-softBlue">Buyers Box Is Empty</p>
-                        </div> : <div className="overflow-y-auto divide-y-2 divide-tradeRed">
+                        </div> : <div className="overflow-y-auto divide-y-2 divide-mainBlue">
                             {SellAndBuy.buy.slice().reverse().map((e, index) => {
                                 return (
-                                    <div key={index} className="flex flex-col justify-center py-3 font-bold mt-1 items-center">
+                                    <div key={index} className="flex flex-col justify-center py-3 font-bold mt-1 items-start">
                                         <p className="text-tradeGreen text-center">{e.tether}</p>
                                         <p className="text-tradeGreen text-center">{e.time}</p>
                                         <p className="text-tradeGreen text-center">{e.tokenRecive}</p>
@@ -1130,10 +1198,10 @@ export default function Pannel() {
                         {!SellAndBuy || SellAndBuy.sell.length === 0 ? <div className="flex h-full flex-row justify-center items-center space-x-5">
                             <FaBoxArchive size={50} color="#7790A6" />
                             <p className="text-xl font-bold text-softBlue">Sellers Box Is Empty</p>
-                        </div> : <div className="overflow-y-auto divide-y-2 divide-tradeGreen">
+                        </div> : <div className="overflow-y-auto divide-y-2 divide-mainBlue">
                             {SellAndBuy.sell.slice().reverse().map((e, index) => {
                                 return (
-                                    <div key={index} className="flex flex-col justify-center  py-3 font-bold mt-1 items-center">
+                                    <div key={index} className="flex flex-col justify-center  py-3 font-bold mt-1 items-start">
                                         <p className="text-tradeRed text-center">{e.tetherRecive}</p>
                                         <p className="text-tradeRed text-center">{e.time}</p>
                                         <p className="text-tradeRed text-center">{e.token}</p>

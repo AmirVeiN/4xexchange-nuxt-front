@@ -20,19 +20,20 @@ import { FaUserTag } from "react-icons/fa";
 import { MdDarkMode } from "react-icons/md";
 import { MdLightMode } from "react-icons/md";
 import Image from "next/image";
+import { usePathname } from 'next/navigation';
+import { ImExit } from "react-icons/im";
 
 export default function Header() {
 
     const [isOpen, setIsOpen] = useState(false);
     const dropdownRef = useRef();
-    const [darkMode, setDarkMode] = useState(false);
-
+    const currentPage = usePathname();
     if (typeof localStorage !== "undefined") {
         var path = window.location.pathname
         var authStorage = localStorage.getItem('auth')
     }
 
-    const [activeItem, setActiveItem] = React.useState(path);
+    const [activeItem, setActiveItem] = useState(path);
 
     const handleClick = (url) => {
         setActiveItem(url);
@@ -42,101 +43,76 @@ export default function Header() {
         setIsOpen(!isOpen);
     };
 
-    const handleClickOutside = (event) => {
-        if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-            setIsOpen(false);
-        }
-    };
-
-    useEffect(() => {
-        const isDark = localStorage.getItem('darkMode') === 'true';
-        setDarkMode(isDark);
-    }, []);
-
-    useEffect(() => {
-        if (darkMode) {
-            document.documentElement.classList.add('dark');
-            localStorage.setItem('darkMode', true);
-        } else {
-            document.documentElement.classList.remove('dark');
-            localStorage.setItem('darkMode', false);
-        }
-    }, [darkMode]);
-
     const logoutFunc = () => {
         dispatch(logout())
         window.location.reload();
     }
 
     const dispatch = useDispatch();
-
     const user = useSelector((state) => state.user.isAuthenticated)
     const auth = authStorage
 
     return (
-        <div className={activeItem !== "/trading" ? "flex flex-col z-40 bg-back dark:bg-background" : "flex flex-col z-40 bg-back dark:bg-black"}>
-            {(activeItem !== "/Sign-Up" && activeItem !== "/Login" ) && <div className={activeItem !== "/trading" ? "hidden md:flex flex-row bg-back dark:bg-background h-20 justify-between items-center px-14 mt-2" : "hidden md:flex flex-row bg-back dark:bg-black h-20 justify-between items-center px-14 mt-2"}>
-                <div className="flex flex-row space-x-5 items-center">
-                    <Link href="/" className="flex flex-row justify-center items-center space-x-2">
-                        <Image src={logo} alt="" width={70} priority={true} />
-                        <p className="text-red dark:text-yellowBorder font-bold text-xl">4xExChange</p>
-                    </Link>
-                    <Link href="/trading" className="text-background dark:text-white font-bold">
-                        Trading
-                    </Link>
-                    <Link href="/deposit" className="text-background dark:text-white font-bold">
-                        Deposit
-                    </Link>
-                    <Link href="/pannel" className="text-background dark:text-white font-bold">
-                        Contact us
-                    </Link>
-                </div>
-                {user === false ? <div className="flex flex-row space-x-3">
-                    <button className="" onClick={() => setDarkMode(!darkMode)}>
-                        {!darkMode ? <div className="px-5 py-1 bg-transparent border-yellow border-2 rounded-md"> <MdLightMode color="#feb72f" size={25} /> </div> : <div className="px-5 py-1 bg-transparent border-yellow border-2 rounded-md"> <MdDarkMode color="#FCD535" size={25} /> </div>}
-                    </button>
-                    <Link href="/Login" className="text-yellow dark:text-yellowBorder rounded-md border-2 border-yellow dark:border-yellow px-2 py-1 font-medium text-sm flex justify-center items-center">
-                        <p>Log In</p>
-                    </Link>
-                    <Link href="/Sign-Up" className="bg-yellow dark:bg-yellow font-bold text-background px-2 py-1 rounded-md text-sm flex flex-row justify-center items-center space-x-1">
-                        <IoPersonAddSharp />
-                        <p>Sign Up</p>
-                    </Link>
-                </div> :
-                    <div className="relative inline-block" ref={dropdownRef}>
-                        <div className="flex flex-row space-x-3">
-                            <button className="" onClick={() => setDarkMode(!darkMode)}>
-                                {!darkMode ? <div className="px-5 py-1 bg-transparent border-yellow border-2 rounded-md"> <MdLightMode color="#feb72f" size={25} /> </div> : <div className="px-5 py-1 bg-transparent border-yellow  border-2 rounded-md"> <MdDarkMode color="#FCD535" size={25} /> </div>}
-                            </button>
-                            <button onClick={toggleDropdown} className="bg-yellow dark:bg-yellow font-bold text-background px-2 py-1 rounded-md text-sm flex flex-row justify-center items-center space-x-2">
-                                <FaUser size={20} color="#1A1A1A" />
-                                <p className="text-lg text-background">Account</p>
-                                <FaChevronDown size={20} color="#1A1A1A" />
-                            </button>
-                        </div>
-                        {isOpen && (
-                            <div className="flex text-yellowBorder w-64 absolute items-start divide-y mt-3 right-0 flex-col border border-yellow bg-background space-y-5 p-5 rounded-xl justify-between shadow-lg shadow-black z-50">
-                                <div className="flex flex-col space-y-3 ">
-                                    <Link href="/pannel" className="text-xl z-40 space-x-3 font-bold flex flex-row justify-start items-center w-full">
-                                        <CgProfile size={24} />
-                                        <p>Profile</p>
-                                    </Link>
-                                    {(user === true && auth === "1" ) && <Link href="/admin" className="text-xl z-40 space-x-3 font-bold flex flex-row justify-start items-center w-full">
-                                        <BsFillShieldLockFill size={24} />
-                                        <p>Admin Dashboard</p>
-                                    </Link>}
-                                </div>
-                                <div className="pt-5">
-                                    <button onClick={logoutFunc} className="text-xl text-red space-x-3 font-bold z-40 flex flex-row justify-start items-center w-full">
-                                        <FaSignOutAlt size={24} />
-                                        <p>Log Out</p>
-                                    </button>
-                                </div>
-                            </div>)}
+        <div className={activeItem !== "/trading" ? "flex flex-col z-40 bg-back dark:bg-background justify-center items-center" : "justify-center items-center flex flex-col z-40 bg-back dark:bg-black"}>
+            <div className="hidden md:flex justify-center items-center">
+                <div className="fixed flex flex-row w-[95%] max-w-[1600px] h-20 justify-between bg-white shadow-xl rounded-3xl items-center px-10 top-3 z-40">
+                    <div className="flex flex-row space-x-5 items-center">
+                        <Link href="/" className="flex flex-row justify-center items-center space-x-2">
+                            <Image src={logo} alt="" width={50} priority={true} />
+                            <p className="text-mainBlue font-bold text-xl">4xExChange</p>
+                        </Link>
+                        <Link href="/trading" className="text-background dark:text-white font-bold">
+                            Trading
+                        </Link>
+                        <Link href="/deposit" className="text-background dark:text-white font-bold">
+                            Deposit
+                        </Link>
+                        <Link href="/pannel" className="text-background dark:text-white font-bold">
+                            Contact us
+                        </Link>
                     </div>
-                }
-            </div>}
-            <div className={activeItem === "/" ? "flex md:hidden fixed bottom-0 w-full bg-background dark:bg-transparent backdrop-blur-3xl justify-between items-center p-4 z-50" : "flex md:hidden fixed bottom-0 w-full bg-background justify-between items-center p-4 z-50"}>
+                    {user === false ? <div className="flex flex-row space-x-3">
+
+                        <Link href="/Login" className="text-mainBlue rounded-md border-2 border-mainBlue px-2 py-2 font-medium text-sm flex justify-center items-center">
+                            <p>Log In</p>
+                        </Link>
+                        <Link href="/Sign-Up" className="bg-mainBlue font-bold text-white px-2 py-2 rounded-md text-sm flex flex-row justify-center items-center space-x-1">
+                            <IoPersonAddSharp />
+                            <p>Sign Up</p>
+                        </Link>
+                    </div> :
+                        <div className="relative inline-block" ref={dropdownRef}>
+                            <div className="flex">
+                                <button onClick={toggleDropdown} className="bg-mainBlue font-bold text-white px-2 py-1 rounded-md text-sm flex flex-row justify-center items-center space-x-2">
+                                    <FaUser size={20} color="white" />
+                                    <p className="text-lg text-white">Account</p>
+                                    <FaChevronDown size={20} color="white" />
+                                </button>
+                            </div>
+                            {isOpen && (
+                                <div className="flex text-mainBlue w-64 absolute items-start divide-y mt-3 right-0 flex-col border border-mainBlue bg-white space-y-5 p-5 rounded-xl justify-between shadow-lg shadow-black z-50">
+                                    <div className="flex flex-col space-y-3 ">
+                                        <Link href="/pannel" className="text-xl z-40 space-x-3 font-bold flex flex-row justify-start items-center w-full">
+                                            <CgProfile size={24} />
+                                            <p>Profile</p>
+                                        </Link>
+                                        {(user === true && auth === "1") && <Link href="/admin" className="text-xl z-40 space-x-3 font-bold flex flex-row justify-start items-center w-full">
+                                            <BsFillShieldLockFill size={24} />
+                                            <p>Admin Dashboard</p>
+                                        </Link>}
+                                    </div>
+                                    <div className="pt-5">
+                                        <button onClick={logoutFunc} className="text-xl text-red space-x-3 font-bold z-40 flex flex-row justify-start items-center w-full">
+                                            <FaSignOutAlt size={24} />
+                                            <p>Log Out</p>
+                                        </button>
+                                    </div>
+                                </div>)}
+                        </div>
+                    }
+                </div>
+            </div>
+            <div className="flex md:hidden fixed bottom-5 w-[90%] h-20 bg-back rounded-xl shadow-lg shadow-mainBlue justify-between items-end p-4 z-50">
                 <Link
                     key="/"
                     href="/"
@@ -144,12 +120,12 @@ export default function Header() {
                 >
                     {activeItem === "/" ?
                         <div className="flex flex-col justify-center items-center">
-                            <FaHome size={30} color="#FCD535" />
-                            <p className="font-bold text-yellowBorder">Home</p>
+                            <FaHome size={30} color="#21749c" />
+                            <p className="font-bold text-mainBlue">Home</p>
                         </div> :
                         <div className="flex flex-col justify-center items-center">
-                            <FaHome size={30} color="white" />
-                            <p className="font-bold text-white">Home</p>
+                            <FaHome size={30} color="gray" />
+                            <p className="font-bold text-gray">Home</p>
                         </div>
                     }
                 </Link>
@@ -158,14 +134,18 @@ export default function Header() {
                     href="/pannel"
                     onClick={() => handleClick("/pannel")}
                 >
-                    {activeItem === "/pannel" ?
-                        <div className="flex flex-col justify-center items-center">
-                            <FaUserCog size={30} color="#FCD535" />
-                            <p className="font-bold text-lg text-yellowBorder ">Pannel</p>
+                    {activeItem === "/pannel" && currentPage === "/pannel" ?
+                        <div>
+                            <div className="fixed h-[70px] w-[75px] rounded-b-xl mb-6 px-2 shadow-md shadow-mainBlue z-40 ">
+                            </div>
+                            <button className="flex flex-col bg-white mb-6 px-2 z-50 justify-center items-center">
+                                <FaUserCog size={30} color="#21749c" />
+                                <p className="font-bold text-lg text-mainBlue ">Pannel</p>
+                            </button>
                         </div> :
                         <div className="flex flex-col justify-center items-center ">
-                            <FaUserCog size={30} color="white" />
-                            <p className="font-bold text-white">Pannel</p>
+                            <FaUserCog size={30} color="gray" />
+                            <p className="font-bold text-gray">Pannel</p>
                         </div>
                     }
                 </Link>}
@@ -176,12 +156,12 @@ export default function Header() {
                 >
                     {activeItem === "/trading" ?
                         <div className="flex flex-col justify-center items-center">
-                            <LiaChartBar size={30} color="#FCD535" />
-                            <p className="font-bold text-yellowBorder">Trade</p>
+                            <LiaChartBar size={30} color="#21749c" />
+                            <p className="font-bold text-mainBlue">Trade</p>
                         </div> :
                         <div className="flex flex-col justify-center items-center">
-                            <LiaChartBar size={30} color="white" />
-                            <p className="font-bold text-white">Trade</p>
+                            <LiaChartBar size={30} color="gray" />
+                            <p className="font-bold text-gray">Trade</p>
                         </div>
                     }
                 </Link>
@@ -192,12 +172,12 @@ export default function Header() {
                 >
                     {activeItem === "/admin" ?
                         <div className="flex flex-col justify-center items-center">
-                            <RiAdminFill size={30} color="#FCD535" />
-                            <p className="font-bold text-yellowBorder">Admin</p>
+                            <RiAdminFill size={30} color="#21749c" />
+                            <p className="font-bold text-mainBlue">Admin</p>
                         </div> :
                         <div className="flex flex-col justify-center items-center">
-                            <RiAdminFill size={30} color="white" />
-                            <p className="font-bold text-white">Admin</p>
+                            <RiAdminFill size={30} color="gray" />
+                            <p className="font-bold text-gray">Admin</p>
                         </div>
                     }
                 </Link>}
@@ -208,12 +188,12 @@ export default function Header() {
                 >
                     {activeItem === "/Sign-Up" ?
                         <div className="flex flex-col justify-center items-center">
-                            <FaUserEdit size={30} color="#FCD535" />
-                            <p className="font-bold text-yellowBorder">Sign-Up</p>
+                            <FaUserEdit size={30} color="#21749c" />
+                            <p className="font-bold text-mainBlue">Sign-Up</p>
                         </div> :
                         <div className="flex flex-col justify-center items-center">
-                            <FaUserEdit size={30} color="white" />
-                            <p className="font-bold text-white">Sign-Up</p>
+                            <FaUserEdit size={30} color="gray" />
+                            <p className="font-bold text-gray">Sign-Up</p>
                         </div>
                     }
                 </Link>}
@@ -224,27 +204,22 @@ export default function Header() {
                 >
                     {activeItem === "/Login" ?
                         <div className="flex flex-col justify-center items-center">
-                            <FaUserTag size={30} color="#FCD535" />
-                            <p className="font-bold text-yellowBorder">Login</p>
+                            <FaUserTag size={30} color="#21749c" />
+                            <p className="font-bold text-mainBlue">Login</p>
                         </div> :
                         <div className="flex flex-col justify-center items-center">
-                            <FaUserTag size={30} color="white" />
-                            <p className="font-bold text-white">Login</p>
+                            <FaUserTag size={30} color="gray" />
+                            <p className="font-bold text-gray">Login</p>
                         </div>
                     }
                 </Link>}
-                <button onClick={() => setDarkMode(!darkMode)}>
-                    {!darkMode ?
-                        <div className="flex flex-col justify-center items-center">
-                            <MdLightMode color="#feb72f" size={30} />
-                            <p className="font-bold text-yellowBorder">Light</p>
-                        </div> :
-                        <div className="flex flex-col justify-center items-center">
-                            <MdDarkMode color="#1F3250" size={30} />
-                            <p className="font-bold text-tableBlue">Dark</p>
-                        </div>
-                    }
-                </button>
+                {user === true && <button
+                    onClick={() => dispatch(logout())}
+                    className="flex flex-col justify-center items-center"
+                >
+                    <ImExit size={28} color="red" />
+                    <p className="font-semibold text-red">LogOut</p>
+                </button>}
             </div>
         </div>
     )

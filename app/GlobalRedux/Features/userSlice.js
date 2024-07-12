@@ -101,7 +101,7 @@ export const getUser = createAsyncThunk('users/me', async () => {
     return res.data;
 });
 
-export const login = createAsyncThunk("user/login", async ({ email, password }, thunkAPI) => {
+export const login = createAsyncThunk("user/login", async ({ email, password }) => {
     const body = { email, password };
     const response = await axiosInstance.post(`/jwt/create/`, body);
 
@@ -351,7 +351,6 @@ const userSlice = createSlice({
                 localStorage.setItem('access', action.payload.access);
                 localStorage.setItem('refresh', action.payload.refresh);
                 state.isAuthenticated = true;
-                location.href = '/';
             })
             .addCase(login.rejected, (state, action) => {
                 state.loading = false;
@@ -365,7 +364,7 @@ const userSlice = createSlice({
                 state.isAuthenticated = true;
                 state.user = action.payload;
                 localStorage.setItem('auth', action.payload.user_type);
-                location.reload();
+
             })
             .addCase(getUser.rejected, state => {
                 state.isAuthenticated = false;

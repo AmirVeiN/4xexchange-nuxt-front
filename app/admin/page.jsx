@@ -1,5 +1,5 @@
 'use client'
-
+import UtcDateClock from "../../components/clockAndDate"
 import { FaUserCircle } from "react-icons/fa";
 import { FaPen } from "react-icons/fa";
 import { TbTruckLoading } from "react-icons/tb";
@@ -134,66 +134,29 @@ export default function Admin() {
             dispatch(temporaryChartData());
             return;
         }
-
-    }, [dispatch, temporaryChartNumbers]);
-
-    useEffect(() => {
-
         if (!chartNumbers) {
             dispatch(ChartData());
             return;
         }
-
-    }, [dispatch, chartNumbers]);
-
-    useEffect(() => {
-
         if (!allDepoits) {
             dispatch(allDepositUsers());
             return;
         }
-
-    }, [dispatch, allDepoits]);
-
-    useEffect(() => {
-
         if (!SellAndBuy) {
             dispatch(GetSellAndBuyAdmin());
             return;
         }
-
-    }, [dispatch, SellAndBuy]);
-
-    useEffect(() => {
-
         if (!requestDeposit) {
             dispatch(DepositRequests());
             return;
         }
-
-    }, [dispatch, requestDeposit]);
-
-    useEffect(() => {
         if (!members) {
             dispatch(AdminUserList());
         }
-    }, [dispatch, members]);
+
+    }, [temporaryChartNumbers, chartNumbers, allDepoits, SellAndBuy, requestDeposit, members, dispatch]);
 
 
-    useEffect(() => {
-        const isDark = localStorage.getItem('darkMode') === 'true';
-        setDarkMode(isDark);
-    }, []);
-
-    useEffect(() => {
-        if (darkMode) {
-            document.documentElement.classList.add('dark');
-            localStorage.setItem('darkMode', true);
-        } else {
-            document.documentElement.classList.remove('dark');
-            localStorage.setItem('darkMode', false);
-        }
-    }, [darkMode]);
 
     if (!members) {
         return <LoadingPage />;
@@ -378,7 +341,7 @@ export default function Admin() {
     };
 
     return (
-        <div className="relative mb-[85px] md:mb-0 bg-white dark:bg-black grow min-h-screen">
+        <div className="relative pb-48 md:pb-0 pt-0 md:pt-24 bg-white dark:bg-black grow min-h-screen">
             <div className={!showMessage ? "w-full h-full flex flex-row md:space-x-2 space-x-0 justify-center items-start" : "blur-md w-full h-full flex flex-row space-x-2 justify-center items-start"}>
                 <div className="3xl:flex 2xl:flex xl:hidden md:hidden lg:hidden sm:hidden ph:hidden bg-softGray m-5 w-[220px] h-[778px] rounded-3xl flex-col justify-between pb-5 items-center">
                     <div className="w-full flex flex-col items-center ">
@@ -387,35 +350,35 @@ export default function Admin() {
                         </div>
                         <Image src="/Line.png" className="pb-4" alt="" width={200} height={2} />
                         <div className="space-y-4 flex flex-col w-[85%] mr-16 ">
-                            <button onClick={() => setActiveButton("Members")} className={activeButton === "Members" ? `pt-1 delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-tradeRed` : `pt-1 delay-150 duration-300 ease-in-out flex flex-row pl-8 space-x-3 items-center`}>
+                            <button onClick={() => setActiveButton("Members")} className={activeButton === "Members" ? `pt-1 delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-mainBlue` : `pt-1 delay-150 duration-300 ease-in-out flex flex-row pl-8 space-x-3 items-center`}>
                                 <FaUserFriends color="white" size={20} />
                                 <p className="text-white text-lg">Members</p>
                             </button>
-                            <button onClick={() => setActiveButton("Members Info")} className={activeButton === "Members Info" ? `pt-1 delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-tradeRed` : `pt-1 delay-150 duration-300 ease-in-out flex flex-row pl-8 space-x-3 items-center`}>
+                            <button onClick={() => setActiveButton("Members Info")} className={activeButton === "Members Info" ? `pt-1 delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-mainBlue` : `pt-1 delay-150 duration-300 ease-in-out flex flex-row pl-8 space-x-3 items-center`}>
                                 <FaUserCircle color="white" size={20} />
                                 <p className="text-white text-lg">Members Info</p>
                             </button>
-                            <button onClick={() => setActiveButton("Ticket")} className={activeButton === "Ticket" ? ` delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-tradeRed` : ` delay-150 duration-300 ease-in-out flex flex-row pl-8 space-x-3 items-center`}>
+                            <button onClick={() => setActiveButton("Ticket")} className={activeButton === "Ticket" ? ` delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-mainBlue` : ` delay-150 duration-300 ease-in-out flex flex-row pl-8 space-x-3 items-center`}>
                                 <BiSupport color="white" size={20} />
                                 <p className="text-white text-lg">Ticket</p>
                             </button>
-                            <button onClick={() => setActiveButton("Chart")} className={activeButton === "Chart" ? ` delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-tradeRed` : ` delay-150 duration-300 ease-in-out flex flex-row pl-8 space-x-3 items-center`}>
+                            <button onClick={() => setActiveButton("Chart")} className={activeButton === "Chart" ? ` delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-mainBlue` : ` delay-150 duration-300 ease-in-out flex flex-row pl-8 space-x-3 items-center`}>
                                 <LuCandlestickChart color="white" size={20} />
                                 <p className="text-white text-lg">Chart</p>
                             </button>
-                            <button onClick={() => { setActiveButton("All Deposits"); dispatch(allDepositUsers()) }} className={activeButton === "All Deposits" ? ` delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-tradeRed` : ` delay-150 duration-300 ease-in-out flex flex-row pl-8 space-x-3 items-center`}>
+                            <button onClick={() => { setActiveButton("All Deposits"); dispatch(allDepositUsers()) }} className={activeButton === "All Deposits" ? ` delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-mainBlue` : ` delay-150 duration-300 ease-in-out flex flex-row pl-8 space-x-3 items-center`}>
                                 <MdOutlinePayments color="white" size={20} />
                                 <p className="text-white text-lg">All Deposits</p>
                             </button>
-                            <button onClick={() => { setActiveButton("Deposit Req"); dispatch(DepositRequests()) }} className={activeButton === "Deposit Req" ? ` delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-tradeRed` : ` delay-150 duration-300 ease-in-out flex flex-row pl-8 space-x-3 items-center`}>
+                            <button onClick={() => { setActiveButton("Deposit Req"); dispatch(DepositRequests()) }} className={activeButton === "Deposit Req" ? ` delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-mainBlue` : ` delay-150 duration-300 ease-in-out flex flex-row pl-8 space-x-3 items-center`}>
                                 <MdOutlinePayments color="white" size={20} />
                                 <p className="text-white text-lg">Deposit Req</p>
                             </button>
-                            <button onClick={() => setActiveButton("Withdraws")} className={activeButton === "Withdraws" ? ` delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-tradeRed` : ` delay-150 duration-300 ease-in-out flex flex-row pl-8 space-x-3 items-center`}>
+                            <button onClick={() => setActiveButton("Withdraws")} className={activeButton === "Withdraws" ? ` delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-mainBlue` : ` delay-150 duration-300 ease-in-out flex flex-row pl-8 space-x-3 items-center`}>
                                 <MdOutlinePayments color="white" size={20} />
                                 <p className="text-white text-lg">Withdraws</p>
                             </button>
-                            <button onClick={() => { setActiveButton("SellAndBuy"); dispatch(GetSellAndBuyAdmin()) }} className={activeButton === "SellAndBuy" ? ` delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-tradeRed` : ` delay-150 duration-300 ease-in-out flex flex-row pl-8 space-x-3 items-center`}>
+                            <button onClick={() => { setActiveButton("SellAndBuy"); dispatch(GetSellAndBuyAdmin()) }} className={activeButton === "SellAndBuy" ? ` delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-mainBlue` : ` delay-150 duration-300 ease-in-out flex flex-row pl-8 space-x-3 items-center`}>
                                 <FaSackDollar color="white" size={20} />
                                 <p className="text-white text-lg">Sell & Buy</p>
                             </button>
@@ -434,63 +397,54 @@ export default function Admin() {
                     </div>
                 </div>
 
+                {isOpen && <div onClick={() => setIsOpen(false)} className="fixed md:hidden backdrop-blur-sm w-full h-full z-40">
 
+                </div>}
                 <div className="3xl:hidden 2xl:hidden xl:flex md:flex lg:flex sm:flex ph:flex items-center justify-between">
-                    <div className="bg-tradeRed/50 rounded-xl p-2 fixed top-3 left-3 z-50">
+                    <div className="bg-mainBlue rounded-xl px-2 pt-2 pb-1 fixed top-3 left-3 z-50">
                         <button onClick={() => setIsOpen(!isOpen)}>
                             {isOpen ? <CgMenuMotion size={35} color="white" /> : <BiMenu size={35} color="white" />}
                         </button>
                     </div>
                     {isOpen && (
-                        <div className="fixed top-0 left-0 flex bg-softGray w-[220px] h-full flex-col justify-between items-center rounded-r-3xl">
+                        <div className="fixed top-20 left-0 flex w-[220px] h-full flex-col justify-between items-center rounded-r-3xl z-50">
                             <div className="w-full flex flex-col items-center ">
-                                <div className="flex justify-center items-center w-full p-5" >
-                                    <Image src={Logo} alt="" width={200} height={200} priority={true} />
-                                </div>
-                                <Image src="/Line.png" className="pb-4" alt="" width={200} height={2} />
                                 <div className="space-y-4 flex flex-col w-[85%] ">
-                                    <button onClick={() => setActiveButton("Members")} className={activeButton === "Members" ? `pt-1 delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-tradeRed` : `pt-1 delay-150 duration-300 ease-in-out flex flex-row space-x-3 items-center`}>
-                                        <FaUserFriends color="white" />
-                                        <p className="text-white text-lg">Members</p>
+                                    <button onClick={() => setActiveButton("Members")} className={activeButton === "Members" ? `pt-1 delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-mainBlue shadow-xl` : `pt-1 delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-back shadow-xl text-mainBlue`}>
+                                        <FaUserFriends />
+                                        <p className=" text-lg">Members</p>
                                     </button>
-                                    <button onClick={() => setActiveButton("Members Info")} className={activeButton === "Members Info" ? `pt-1 delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-tradeRed` : `pt-1 delay-150 duration-300 ease-in-out flex flex-row space-x-3 items-center`}>
-                                        <FaUserCircle color="white" size={20} />
-                                        <p className="text-white text-lg">Members Info</p>
+                                    <button onClick={() => setActiveButton("Members Info")} className={activeButton === "Members Info" ? `pt-1 delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-mainBlue shadow-xl` : `pt-1 delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-back shadow-xl text-mainBlue`}>
+                                        <FaUserCircle size={20} />
+                                        <p className=" text-lg">Members Info</p>
                                     </button>
-                                    <button onClick={() => setActiveButton("Ticket")} className={activeButton === "Ticket" ? ` delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-tradeRed` : ` delay-150 duration-300 ease-in-out flex flex-row space-x-3 items-center`}>
-                                        <BiSupport color="white" size={20} />
-                                        <p className="text-white text-lg">Ticket</p>
+                                    <button onClick={() => setActiveButton("Ticket")} className={activeButton === "Ticket" ? ` delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-mainBlue shadow-xl` : ` pt-1 delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-back shadow-xl text-mainBlue`}>
+                                        <BiSupport size={20} />
+                                        <p className=" text-lg">Ticket</p>
                                     </button>
-                                    <button onClick={() => setActiveButton("Chart")} className={activeButton === "Chart" ? ` delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-tradeRed` : ` delay-150 duration-300 ease-in-out flex flex-row space-x-3 items-center`}>
-                                        <LuCandlestickChart color="white" size={20} />
-                                        <p className="text-white text-lg">Chart</p>
+                                    <button onClick={() => setActiveButton("Chart")} className={activeButton === "Chart" ? ` delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-mainBlue shadow-xl` : ` pt-1 delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-back shadow-xl text-mainBlue`}>
+                                        <LuCandlestickChart size={20} />
+                                        <p className=" text-lg">Chart</p>
                                     </button>
-                                    <button onClick={() => { setActiveButton("All Deposits"); dispatch(allDepositUsers()) }} className={activeButton === "All Deposits" ? ` delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-tradeRed` : ` delay-150 duration-300 ease-in-out flex flex-row space-x-3 items-center`}>
-                                        <MdOutlinePayments color="white" size={20} />
-                                        <p className="text-white text-lg">All Deposits</p>
+                                    <button onClick={() => { setActiveButton("All Deposits"); dispatch(allDepositUsers()) }} className={activeButton === "All Deposits" ? ` delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-mainBlue shadow-xl` : ` pt-1 delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-back shadow-xl text-mainBlue`}>
+                                        <MdOutlinePayments size={20} />
+                                        <p className=" text-lg">All Deposits</p>
                                     </button>
-                                    <button onClick={() => { setActiveButton("Deposit Req"); dispatch(DepositRequests()) }} className={activeButton === "Deposit Req" ? ` delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-tradeRed` : ` delay-150 duration-300 ease-in-out flex flex-row space-x-3 items-center`}>
-                                        <MdOutlinePayments color="white" size={20} />
-                                        <p className="text-white text-lg">Deposit Req</p>
+                                    <button onClick={() => { setActiveButton("Deposit Req"); dispatch(DepositRequests()) }} className={activeButton === "Deposit Req" ? ` delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-mainBlue shadow-xl` : ` pt-1 delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-back shadow-xl text-mainBlue`}>
+                                        <MdOutlinePayments size={20} />
+                                        <p className=" text-lg">Deposit Req</p>
                                     </button>
-                                    <button onClick={() => setActiveButton("Withdraws")} className={activeButton === "Withdraws" ? ` delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-tradeRed` : ` delay-150 duration-300 ease-in-out flex flex-row space-x-3 items-center`}>
-                                        <MdOutlinePayments color="white" size={20} />
-                                        <p className="text-white text-lg">Withdraws</p>
+                                    <button onClick={() => setActiveButton("Withdraws")} className={activeButton === "Withdraws" ? ` delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-mainBlue shadow-xl` : ` pt-1 delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-back shadow-xl text-mainBlue`}>
+                                        <MdOutlinePayments size={20} />
+                                        <p className=" text-lg">Withdraws</p>
                                     </button>
-                                    <button onClick={() => { setActiveButton("SellAndBuy"); dispatch(GetSellAndBuyAdmin()) }} className={activeButton === "SellAndBuy" ? ` delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-tradeRed` : ` delay-150 duration-300 ease-in-out flex flex-row space-x-3 items-center`}>
-                                        <FaSackDollar color="white" size={20} />
-                                        <p className="text-white text-lg">Sell & Buy</p>
+                                    <button onClick={() => { setActiveButton("SellAndBuy"); dispatch(GetSellAndBuyAdmin()) }} className={activeButton === "SellAndBuy" ? ` delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-mainBlue shadow-xl` : ` pt-1 delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-back shadow-xl text-mainBlue`}>
+                                        <FaSackDollar size={20} />
+                                        <p className=" text-lg">Sell & Buy</p>
                                     </button>
-                                </div>
-                                <Image src="/Line.png" className="py-5" alt="" width={200} height={2} />
-                                <div className="space-y-4 flex flex-col w-[85%] mr-16">
-                                    <Link href="/" className="flex flex-row pl-8 space-x-3 items-center">
-                                        <IoIosHome color="white" size={20} />
-                                        <p className="text-white text-lg">Home</p>
-                                    </Link>
-                                    <button onClick={() => dispatch(logout())} className="flex flex-row pl-8 space-x-3 items-center">
-                                        <ImExit color="#EA5455" size={20} />
-                                        <p className="text-tradeRed text-lg">LogOut</p>
+                                    <button onClick={() => dispatch(logout())} className='delay-150 duration-300 ease-in-out flex flex-row p-1 px-3 justify-start rounded-l-xl rounded-br-3xl rounded-tr-md space-x-3 items-center bg-red shadow-xl'>
+                                        <ImExit color="white" size={20} />
+                                        <p className="text-white text-lg">LogOut</p>
                                     </button>
                                 </div>
                             </div>
@@ -499,7 +453,7 @@ export default function Admin() {
                 </div>
 
 
-                <div className="max-w-[1195px] w-full h-full pb-5 md:mb-10 mb-0 md:mt-5 mt-0 flex flex-col space-y-2 bg-back md:rounded-3xl rounded-none">
+                <div className="max-w-[1195px] w-full h-full pb-5 md:mb-10 mb-0 md:mt-5 mt-16 flex flex-col space-y-2 bg-back md:rounded-3xl rounded-none">
                     <div className="md:flex hidden flex-col md:flex-row md:space-y-0 space-y-5 p-1 md:p-5">
                         <div className="min-w-[218px] h-[72px] bg-white shadow-lg rounded-2xl justify-center md:justify-start items-center flex md:rounded-br-[90px] md:rounded-tr-md">
                             <div className="flex flex-row justify-start pl-4 pt-1 items-center space-x-4">
@@ -612,17 +566,18 @@ export default function Admin() {
                         {members.length === 0 ? <div className="flex h-full flex-row justify-center items-center space-x-5">
                             <FaBoxArchive size={50} color="#7790A6" />
                             <p className="text-xl font-bold text-softBlue">Members Is Empty</p>
-                        </div> : <div className="overflow-y-scroll divide-y-2 divide-tradeRed">
+                        </div> : <div className="overflow-y-scroll divide-y-2 divide-mainBlue">
                             {members.slice().reverse().map((e, index) => {
                                 return (
                                     <div key={index} className="flex flex-col justify-between px-5 items-center py-3">
-                                        <p className="bg-back shadow-inner rounded py-1 w-full text-center text-softBlue">{e.id}</p>
-                                        <p className="bg-back shadow-inner rounded py-1 w-full text-center text-softBlue">{e.username}</p>
-                                        <p className="bg-back shadow-inner rounded py-1 w-full text-center text-softBlue">{e.date_joined.split(":")[0]}</p>
-                                        <p className="bg-back shadow-inner rounded py-1 w-full text-center text-softBlue">{e.email}</p>
-                                        <div className="my-2">{(e.user_type === 3 && <div className="flex flex-row justify-center items-center space-x-1 bg-Green rounded-md px-2 py-1"><FaCheckCircle color="white" /><p className="text-white font-bold">Verified</p></div>) || (e.user_type === 4 && <div className="flex flex-row justify-center items-center space-x-1 bg-red rounded-md px-2 py-1"><FaBan color="white" /><p className="text-white font-bold">Baned</p></div>) || (e.user_type === 1 && <div className="flex flex-row justify-center items-center space-x-1 bg-gridPurple rounded-md px-2 py-1"><MdAdminPanelSettings color="white" /><p className="text-white font-bold">Admin</p></div>) || (e.user_type === 2 && <div className="flex flex-row justify-center items-center space-x-1 bg-gray2 rounded-md px-2 py-1"><GiShieldDisabled color="white" /><p className="text-white font-bold">Not Verified</p></div>)}</div>
-                                        <button onClick={() => { setActiveButton("Members Info"); dispatch(UserFullDetails({ id: e.id })) }} className="p-1 justify-center items-center flex bg-red rounded-md">
-                                            <FaPen color="white" size={20} />
+                                        <p className="bg-back shadow-inner rounded py-1 w-full text-center text-mainBlue">{e.id}</p>
+                                        <p className="bg-back shadow-inner rounded py-1 w-full text-center text-mainBlue">{e.username}</p>
+                                        <p className="bg-back shadow-inner rounded py-1 w-full text-center text-mainBlue">{e.date_joined.split(":")[0]}</p>
+                                        <p className="bg-back shadow-inner rounded py-1 w-full text-center text-mainBlue">{e.email}</p>
+                                        <div className="my-2 w-32">{(e.user_type === 3 && <div className="flex flex-row justify-center items-center space-x-1 bg-Green rounded-md px-2 py-1"><FaCheckCircle color="white" /><p className="text-white font-bold">Verified</p></div>) || (e.user_type === 4 && <div className="flex flex-row justify-center items-center space-x-1 bg-red rounded-md px-2 py-1"><FaBan color="white" /><p className="text-white font-bold">Baned</p></div>) || (e.user_type === 1 && <div className="flex flex-row justify-center items-center space-x-1 bg-gridPurple rounded-md px-2 py-1"><MdAdminPanelSettings color="white" /><p className="text-white font-bold">Admin</p></div>) || (e.user_type === 2 && <div className="flex flex-row justify-center items-center space-x-1 bg-gray2 rounded-md px-2 py-1"><GiShieldDisabled color="white" /><p className="text-white font-bold">Not Verified</p></div>)}</div>
+                                        <button onClick={() => { setActiveButton("Members Info"); dispatch(UserFullDetails({ id: e.id })) }} className="p-1 w-32 justify-center items-center flex bg-mainBlue rounded-md space-x-2">
+                                            <p className="font-black text-base">Open Info</p>
+                                            <FaPen color="white" size={15} />
                                         </button>
                                     </div>
                                 )
@@ -690,9 +645,10 @@ export default function Admin() {
                                 <p className="bg-back shadow-inner rounded py-1 w-[300px] text-center text-softBlue">{memberDetail.username}</p>
                                 <p className="bg-back shadow-inner rounded py-1 w-[300px] text-center text-softBlue">{memberDetail.date_joined}</p>
                                 <p className="bg-back shadow-inner rounded py-1 w-[300px] text-center text-softBlue">{memberDetail.email}</p>
-                                <div className="w-[150px]">{(memberDetail.user_type === 3 && <div className="flex flex-row justify-center items-center space-x-1 bg-Green rounded-md px-2 py-1"><FaCheckCircle color="white" /><p className="text-white font-bold">Verified</p></div>) || (memberDetail.user_type === 4 && <div className="flex flex-row justify-center items-center space-x-1 bg-red rounded-md px-2 py-1"><FaBan color="white" /><p className="text-white font-bold">Baned</p></div>) || (memberDetail.user_type === 1 && <div className="flex flex-row justify-center items-center space-x-1 bg-gridPurple rounded-md px-2 py-1"><MdAdminPanelSettings color="white" /><p className="text-white font-bold">Admin</p></div>) || (memberDetail.user_type === 2 && <div className="flex flex-row justify-center items-center space-x-1 bg-gray2 rounded-md px-2 py-1"><GiShieldDisabled color="white" /><p className="text-white font-bold">Not Verified</p></div>)}</div>
-                                <button onClick={() => setChange("ChangeStatus")} className="p-1 justify-center w-[60px] items-center flex bg-tradeRed rounded-md">
-                                    <FaPen color="white" size={20} />
+                                <div className="w-32">{(memberDetail.user_type === 3 && <div className="flex flex-row justify-center items-center space-x-1 bg-Green rounded-md px-2 py-1"><FaCheckCircle color="white" /><p className="text-white font-bold">Verified</p></div>) || (memberDetail.user_type === 4 && <div className="flex flex-row justify-center items-center space-x-1 bg-red rounded-md px-2 py-1"><FaBan color="white" /><p className="text-white font-bold">Baned</p></div>) || (memberDetail.user_type === 1 && <div className="flex flex-row justify-center items-center space-x-1 bg-gridPurple rounded-md px-2 py-1"><MdAdminPanelSettings color="white" /><p className="text-white font-bold">Admin</p></div>) || (memberDetail.user_type === 2 && <div className="flex flex-row justify-center items-center space-x-1 bg-gray2 rounded-md px-2 py-1"><GiShieldDisabled color="white" /><p className="text-white font-bold">Not Verified</p></div>)}</div>
+                                <button onClick={() => setChange("ChangeStatus")} className="p-1 w-32 justify-center items-center flex bg-mainBlue rounded-md space-x-2">
+                                    <p className="font-black text-base">Edit Status</p>
+                                    <FaPen color="white" size={15} />
                                 </button>
                             </div>
                         </div>}
@@ -764,11 +720,12 @@ export default function Admin() {
                             <p className="text-xl font-bold text-softBlue">Members Info Is Empty</p>
                         </div> : <div className="">
                             <div className="flex flex-col justify-between items-center space-y-2 py-3">
-                                <div className="bg-back rounded py-1 w-[50px] flex justify-center items-center">< SiTether size={50} color="green" /></div>
-                                <p className="bg-back font-bold shadow-inner text-lg rounded py-1 w-[300px] text-center text-softBlue">Tether (USDT)</p>
-                                <p className="bg-back font-bold shadow-inner text-xl rounded py-1 w-[300px] text-center text-softBlue">{memberDetail.usdt}</p>
-                                <button onClick={() => setChange("changeUserValue")} className="p-2 justify-center items-center flex bg-tradeRed rounded-md">
-                                    <FaPen color="white" size={20} />
+                                <div className="rounded py-1 w-[50px] flex justify-center items-center">< SiTether size={50} color="green" /></div>
+                                <p className="bg-back font-bold shadow-inner text-lg rounded py-1 w-[300px] text-center text-mainBlue">Tether (USDT)</p>
+                                <p className="bg-back font-bold shadow-inner text-xl rounded py-1 w-[300px] text-center text-mainBlue">{memberDetail.usdt}</p>
+                                <button onClick={() => setChange("changeUserValue")} className="p-1 w-32 justify-center items-center flex bg-mainBlue rounded-md space-x-2">
+                                    <p className="font-black text-base">Edit Value</p>
+                                    <FaPen color="white" size={15} />
                                 </button>
                             </div>
                         </div>}
@@ -780,10 +737,11 @@ export default function Admin() {
                                 <div className="w-[60px] py-2 rounded-xl text-white">
                                     <Image src={coin} alt="" width={60} height={60} />
                                 </div>
-                                <p className="bg-back font-bold shadow-inner text-lg rounded py-1 w-[300px] text-center text-softBlue">Token (4X)</p>
-                                <p className="bg-back font-bold shadow-inner text-xl rounded py-1 w-[300px] text-center text-softBlue">{memberDetail.token}</p>
-                                <button onClick={() => setChange("changeUserValue")} className="p-2 justify-center items-center flex bg-tradeRed rounded-md">
-                                    <FaPen color="white" size={20} />
+                                <p className="bg-back font-bold shadow-inner text-lg rounded py-1 w-[300px] text-center text-mainBlue">Token (4X)</p>
+                                <p className="bg-back font-bold shadow-inner text-xl rounded py-1 w-[300px] text-center text-mainBlue">{memberDetail.token}</p>
+                                <button onClick={() => setChange("changeUserValue")} className="p-1 w-32 justify-center items-center flex bg-mainBlue rounded-md space-x-2">
+                                    <p className="font-black text-base">Edit Value</p>
+                                    <FaPen color="white" size={15} />
                                 </button>
                             </div>
                         </div>}
@@ -817,11 +775,11 @@ export default function Admin() {
                                 placeholder="Currency Amount"
                                 value={currencyAmount}
                                 onChange={handleCurrencyAmount}
-                                className="w-[150px] md:w-72 p-2 rounded-lg text-black font-bold bg-back shadow-Green shadow-inner"
+                                className="w-72 p-4 rounded-lg text-black font-bold bg-back shadow-mainBlue shadow-inner"
                             />
                         </div>
                         <div className="flex justify-center items-center pt-5">
-                            <button type="submit" className="text-white bg-red font-bold px-4 py-2 rounded-xl shadow-md shadow-background">
+                            <button type="submit" className="text-white bg-mainBlue font-bold px-4 py-2 rounded-xl shadow-md shadow-background">
                                 Submit
                             </button>
                         </div>
@@ -846,7 +804,7 @@ export default function Admin() {
                             />
                         </div>
                         <div className="flex justify-center items-center pt-5">
-                            <button type="submit" className="text-white bg-red font-bold px-4 py-2 rounded-xl shadow-md shadow-background">
+                            <button type="submit" className="text-white bg-mainBlue font-bold px-4 py-2 rounded-xl shadow-md shadow-background">
                                 Submit
                             </button>
                         </div>
@@ -871,14 +829,14 @@ export default function Admin() {
                         {!memberDetail || memberDetail.user_buy.length === 0 ? <div className="flex h-full flex-row justify-center items-center space-x-5">
                             <FaBoxArchive size={50} color="#7790A6" />
                             <p className="text-xl font-bold text-softBlue">Buyers Box Is Empty</p>
-                        </div> : <div className="overflow-y-auto divide-y-2 divide-tradeRed md:divide-y-0">
+                        </div> : <div className="overflow-y-auto divide-y-2 divide-mainBlue md:divide-y-0">
                             {memberDetail.user_buy.slice().reverse().map((e, index) => {
                                 return (
-                                    <div key={index} className="flex flex-col md:flex-row justify-between py-3 font-bold mt-1 items-center">
-                                        <p className="text-tradeGreen w-[200px] text-center">{e.tether}</p>
-                                        <p className="text-tradeGreen w-[170px] text-center">{e.time}</p>
-                                        <p className="text-tradeGreen w-[200px] text-center">{e.tokenRecive}</p>
-                                        <p className="text-tradeGreen w-[150px] text-center">{e.tokenPrice}</p>
+                                    <div key={index} className="flex flex-col md:flex-row justify-between py-3 font-bold mt-1 items-start md:items-center">
+                                        <p className="text-tradeGreen w-[200px] text-left md:text-center">{e.tether}</p>
+                                        <p className="text-tradeGreen w-[170px] text-left md:text-center">{e.time}</p>
+                                        <p className="text-tradeGreen w-[200px] text-left md:text-center">{e.tokenRecive}</p>
+                                        <p className="text-tradeGreen w-[150px] text-left md:text-center">{e.tokenPrice}</p>
                                     </div>
                                 )
                             })}
@@ -900,14 +858,14 @@ export default function Admin() {
                         {!memberDetail || memberDetail.user_sell.length === 0 ? <div className="flex h-full flex-row justify-center items-center space-x-5">
                             <FaBoxArchive size={50} color="#7790A6" />
                             <p className="text-xl font-bold text-softBlue">Sellers Box Is Empty</p>
-                        </div> : <div className="overflow-y-auto divide-y-2 divide-tradeGreen md:divide-y-0">
+                        </div> : <div className="overflow-y-auto divide-y-2 divide-mainBlue md:divide-y-0">
                             {memberDetail.user_sell.slice().reverse().map((e, index) => {
                                 return (
-                                    <div key={index} className="flex flex-col md:flex-row justify-between py-3 font-bold mt-1 items-center">
-                                        <p className="text-tradeRed w-[200px] text-center">{e.tetherRecive}</p>
-                                        <p className="text-tradeRed w-[170px] text-center">{e.time}</p>
-                                        <p className="text-tradeRed w-[200px] text-center">{e.token}</p>
-                                        <p className="text-tradeRed w-[150px] text-center">{e.tokenPrice}</p>
+                                    <div key={index} className="flex flex-col md:flex-row justify-between py-3 font-bold mt-1 items-start md:items-center">
+                                        <p className="text-tradeRed w-[200px] text-left md:text-center">{e.tetherRecive}</p>
+                                        <p className="text-tradeRed w-[170px] text-left md:text-center">{e.time}</p>
+                                        <p className="text-tradeRed w-[200px] text-left md:text-center">{e.token}</p>
+                                        <p className="text-tradeRed w-[150px] text-left md:text-center">{e.tokenPrice}</p>
                                     </div>
                                 )
                             })}
@@ -1010,8 +968,9 @@ export default function Admin() {
                                         <div className="w-[150px]">{(e.ticket_status === "Pending" && <div className="flex justify-center items-center space-x-1 bg-yellow rounded-md px-2 py-1"><p className="text-white font-bold">Pending</p></div>) ||
                                             (e.ticket_status === "Completed" && <div className="flex justify-center items-center space-x-1 bg-red rounded-md px-2 py-1"><p className="text-white font-bold">Completed</p></div>)
                                             || (e.ticket_status === "Active" && <div className="flex justify-center items-center space-x-1 bg-Green rounded-md px-2 py-1"><p className="text-white font-bold">Active</p></div>)}</div>
-                                        <div className="w-[50px] flex justify-center items-center">
-                                            <button onClick={() => { setActiveButton("Ticket"); setTicketDetail(e) }} className="p-1 justify-center items-center flex bg-red rounded-md">
+                                        <div className="w-32 flex justify-center items-center">
+                                            <button onClick={() => { setActiveButton("Ticket"); setTicketDetail(e) }} className="p-1 w-32 justify-center items-center flex bg-mainBlue rounded-md space-x-2">
+                                                <p className="font-black text-base">Open Ticket</p>
                                                 <FaPen color="white" size={15} />
                                             </button>
                                         </div>
@@ -1050,7 +1009,7 @@ export default function Admin() {
                             </button>
                         </div>
                     </div>}
-                    {activeButton === "Ticket" && <div on className="m-2 md:m-5 bg-white rounded-3xl shadow-lg flex md:h-96 h-[550px] flex-col divide-y-2 divide-softBlue/20 p-5 ">
+                    {activeButton === "Ticket" && <div on className="m-2 md:m-5 bg-white rounded-3xl shadow-lg flex md:h-96 h-[600px] flex-col divide-y-2 divide-softBlue/20 p-5 ">
                         <div className="flex flex-row justify-center md:justify-between items-center pb-3">
                             <div className="flex flex-row space-x-2 justify-center items-center">
                                 <Image src="/Vector23.png" className="h-fit " alt="" width={20} height={20} />
@@ -1067,18 +1026,22 @@ export default function Admin() {
                         {!tickets || tickets.length === 0 ? <div className="flex h-full flex-row justify-center items-center space-x-5">
                             <FaBoxArchive size={50} color="#7790A6" />
                             <p className="text-xl font-bold text-softBlue">Ticket Box Is Empty</p>
-                        </div> : <div className="overflow-y-scroll divide-y-2 divide-yellow md:divide-y-0">
+                        </div> : <div className="overflow-y-scroll divide-y-2 divide-mainBlue md:divide-y-0">
                             {tickets.slice().reverse().map((e, index) => {
                                 return (
-                                    <div key={index} className="flex flex-col md:flex-row justify-between py-3 space-y-2 md:space-y-0 mt-1 items-center">
-                                        <p className="text-gray bg-back shadow-inner w-full md:w-[150px] text-center">{e.title.substring(0, 15)}</p>
-                                        <p className="text-gray bg-back shadow-inner w-full md:w-[300px] text-center">{e.email}</p>
-                                        <p className="text-gray bg-back shadow-inner w-full md:w-[150px] text-center">{e.date_created.split(":")[0].substring(0, 10)}</p>
-                                        <div className="w-[150px]">{(e.ticket_status === "Pending" && <div className="flex justify-center items-center space-x-1 bg-blue rounded-md px-2 py-1"><p className="text-white font-bold">Pending</p></div>) ||
+                                    <div key={index} className="flex flex-col md:flex-row justify-between py-3 space-y-3 md:space-y-0 mt-1 items-center">
+                                        <p className="text-black bg-back shadow-inner w-full md:w-[150px] text-center">{e.title.substring(0, 15)}</p>
+                                        <p className="text-black bg-back shadow-inner w-full md:w-[300px] text-center">{e.email}</p>
+                                        <p className="text-black bg-back shadow-inner w-full md:w-[150px] text-center">{e.date_created.split(":")[0].substring(0, 10)}</p>
+                                        <div className="w-[128px]">{(e.ticket_status === "Pending" && <div className="flex justify-center items-center space-x-1 bg-blue rounded-md px-2 py-1"><p className="text-white font-bold">Pending</p></div>) ||
                                             (e.ticket_status === "Completed" && <div className="flex justify-center items-center space-x-1 bg-red rounded-md px-2 py-1"><p className="text-white font-bold">Completed</p></div>)
                                             || (e.ticket_status === "Active" && <div className="flex justify-center items-center space-x-1 bg-Green rounded-md px-2 py-1"><p className="text-white font-bold">Active</p></div>)}</div>
-                                        <div className="w-[100px] flex justify-center items-center">
-                                            <button onClick={() => setTicketDetail(e)} className="p-2 justify-center w-[60px] items-center flex bg-red rounded-md">
+                                        <div className="w-32 md:w-[100px] flex justify-center items-center">
+                                            <button onClick={() => setTicketDetail(e)} className="hidden md:flex p-2 justify-center w-[60px] items-center bg-red rounded-md">
+                                                <FaPen color="white" size={15} />
+                                            </button>
+                                            <button onClick={() => setTicketDetail(e)} className="flex md:hidden p-2 w-32 justify-center items-center bg-mainBlue rounded-md space-x-2">
+                                                <p className="font-black text-base">Open Ticket</p>
                                                 <FaPen color="white" size={15} />
                                             </button>
                                         </div>
@@ -1094,12 +1057,12 @@ export default function Admin() {
                                     <Image src="/Vector23.png" className="h-fit " alt="" width={20} height={20} />
                                     <p className="font-bold text-softBlue">TicketAnswer</p>
                                 </div>
-                                <div className="bg-back shadow-inner w-full md:w-fit md:shadow-none md:bg-white">
+                                <div className="shadow-inner w-full md:w-fit md:shadow-none md:bg-white">
                                     <p className="font-bold text-softBlue">
                                         Title : {ticketDetail.title}
                                     </p>
                                 </div>
-                                <div className="bg-back shadow-inner w-full md:w-fit md:shadow-none md:bg-white">
+                                <div className="shadow-inner w-full md:w-fit md:shadow-none md:bg-white">
                                     <p className="font-bold text-softBlue">
                                         Ticket Stuts : {ticketDetail.ticket_status}
                                     </p>
@@ -1182,7 +1145,7 @@ export default function Admin() {
                     </div>}
 
 
-                    {activeButton === "Chart" && change === "Real Chart" && <div on className="md:m-5 bg-white rounded-3xl shadow-lg flex  h-96 flex-col divide-y-2 divide-softBlue/20 p-5 ">
+                    {activeButton === "Chart" && change === "Real Chart" && <div on className="md:m-5 m-2 bg-white rounded-3xl shadow-lg flex md:h-96 h-[450px] flex-col divide-y-2 divide-softBlue/20 p-5 ">
                         <div className="flex flex-row justify-center md:justify-between items-center pb-3">
                             <div className="flex flex-row space-x-2 justify-center items-center">
                                 <Image src="/Vector23.png" className="h-fit " alt="" width={20} height={20} />
@@ -1198,14 +1161,14 @@ export default function Admin() {
                         {!chartNumbers || chartNumbers.length === 0 ? <div className="flex h-full flex-row justify-center items-center space-x-5">
                             <FaBoxArchive size={50} color="#7790A6" />
                             <p className="text-xl font-bold text-softBlue">chartNumbers Box Is Empty</p>
-                        </div> : <div className="overflow-y-scroll divide-y-2 divide-tradeRed md:divide-y-0">
+                        </div> : <div className="overflow-y-scroll divide-y-2 divide-mainBlue md:divide-y-0">
                             {chartNumbers.slice(-50).reverse().map((e, index) => {
                                 return (
                                     <div key={index} className="flex flex-col md:flex-row justify-between space-y-2 md:space-y-0 py-3 mt-1 items-center">
                                         <p className="text-gray w-full md:w-[80px] text-center font-bold">4x Token</p>
                                         <p className="text-gray w-full md:w-[150px] text-center font-bold">{e.value}</p>
                                         <p className="text-gray w-full md:w-[150px] text-center font-bold">{e.time}</p>
-                                        <div className="px-1 py-2 bg-down rounded-xl flex flex-row space-x-2 justify-center items-center shadow-md font-bold shadow-background">
+                                        <div className="px-1 py-2 bg-mainBlue rounded-xl flex flex-row space-x-2 justify-center items-center shadow-md font-bold shadow-background">
                                             <FaCheckCircle size={20} color="white" />
                                             <p className="text-white text-base md:text-sm">Successful Chenged</p>
                                         </div>
@@ -1214,7 +1177,7 @@ export default function Admin() {
                             })}
                         </div>}
                     </div>}
-                    {activeButton === "Chart" && change === "Temporary Chart" && <div on className="md:m-5 bg-white rounded-3xl shadow-lg flex  h-96 flex-col divide-y-2 divide-softBlue/20 p-5 ">
+                    {activeButton === "Chart" && change === "Temporary Chart" && <div on className="md:m-5 bg-white rounded-3xl shadow-lg flex md:h-96 h-[450px] flex-col divide-y-2 divide-softBlue/20 p-5 ">
                         <div className="flex flex-row justify-center md:justify-between items-center pb-3">
                             <div className="flex flex-row space-x-2 justify-center items-center">
                                 <Image src="/Vector23.png" className="h-fit " alt="" width={20} height={20} />
@@ -1230,7 +1193,7 @@ export default function Admin() {
                         {!temporaryChartNumbers || temporaryChartNumbers.length === 0 ? <div className="flex h-full flex-row justify-center items-center space-x-5">
                             <FaBoxArchive size={50} color="#7790A6" />
                             <p className="text-xl font-bold text-softBlue">chartTemporary Box Is Empty</p>
-                        </div> : <div className="overflow-y-scroll divide-y-2 divide-tradeRed md:divide-y-0">
+                        </div> : <div className="overflow-y-scroll divide-y-2 divide-mainBlue md:divide-y-0">
                             {temporaryChartNumbers.slice(-50).reverse().map((e, index) => {
                                 return (
                                     <div key={index} className="flex flex-col md:flex-row justify-between space-y-2 md:space-y-0 py-3 mt-1 items-center">
@@ -1256,9 +1219,14 @@ export default function Admin() {
                                 <p className="font-bold text-softBlue">{change}</p>
                             </div>
                         </div>
-                        <div className="flex flex-row space-x-4 justify-around items-center py-5">
-                            <p className="hidden md:flex shadow-inner rounded-lg text-softBlue font-bold bg-back w-72 p-2">Enter the New Price</p>
-                            <p className="flex md:hidden shadow-inner rounded-lg text-softBlue font-bold bg-back w-72 p-2">Price</p>
+                        <div className="flex flex-row space-x-4 justify-start items-center py-5">
+                            <p className="flex shadow-inner rounded-lg text-softBlue font-bold bg-back w-72 p-2">UTC Time</p>
+                            <div className="w-full p-2 rounded-lg text-black font-bold bg-back shadow-inner">
+                                <UtcDateClock />
+                            </div>
+                        </div>
+                        <div className="flex flex-row space-x-4 justify-start items-center py-5 pl-0">
+                            <p className="flex  shadow-inner rounded-lg text-softBlue font-bold bg-back w-72 p-2">Price</p>
                             <input
                                 required
                                 step="any"
@@ -1269,10 +1237,8 @@ export default function Admin() {
                                 className="w-full p-2 rounded-lg text-black font-bold bg-back shadow-inner"
                             />
                         </div>
-                        <div className="flex flex-row space-x-4 justify-around items-center py-5">
-                            <p className="hidden md:flex shadow-inner rounded-lg text-softBlue font-bold bg-back w-72 p-2">Enter the Time (UTC)</p>
-                            <p className="flex md:hidden shadow-inner rounded-lg text-softBlue font-bold bg-back w-72 p-2">Time(UTC)</p>
-
+                        <div className="flex flex-row space-x-4 justify-start items-center py-5">
+                            <p className="flex shadow-inner rounded-lg text-softBlue font-bold bg-back w-72 p-2">Time(UTC)</p>
                             <input
                                 required
                                 type="datetime-local"
@@ -1282,7 +1248,7 @@ export default function Admin() {
                             />
                         </div>
                         <div className="flex justify-center items-center pt-5">
-                            <button type="submit" className="text-white bg-red font-bold px-4 py-2 rounded-xl shadow-md shadow-background">
+                            <button type="submit" className="text-white bg-mainBlue font-bold px-4 py-2 rounded-xl shadow-md shadow-background">
                                 Submit
                             </button>
                         </div>
@@ -1328,23 +1294,23 @@ export default function Admin() {
                         </div>
                         <div className="flex flex-row justify-between items-center text-sm md:text-base py-3">
                             <p className="font-medium text-softBlue w-fit md:w-[250px] text-center">User</p>
-                            <p className="font-medium text-softBlue w-fit md:w-[120px] text-center">Type</p>
+                            <p className="font-medium text-softBlue w-fit md:w-[100px] text-center">Type</p>
                             <p className="font-medium text-softBlue w-fit md:w-[150px] text-center">Deposit</p>
                             <p className="font-medium text-softBlue w-fit md:w-[400px] text-center">Wallet</p>
-                            <p className="font-medium text-softBlue w-fit md:w-[150px] text-center">Time</p>
+                            <p className="font-medium text-softBlue w-fit md:w-[160px] text-center">Time</p>
                         </div>
                         {!allDepoits || allDepoits.length === 0 ? <div className="flex h-full flex-row justify-center items-center space-x-5">
                             <FaBoxArchive size={50} color="#7790A6" />
                             <p className="text-xl font-bold text-softBlue">Payments Box Is Empty</p>
-                        </div> : <div className="overflow-y-auto divide-y-2 divide-yellow md:divide-y-0">
+                        </div> : <div className="overflow-y-auto divide-y-2 divide-mainBlue md:divide-y-0">
                             {allDepoits.slice().reverse().map((e, index) => {
                                 return (
-                                    <div key={index} className="flex flex-col md:flex-row justify-between space-y-3 md:space-y-0 py-3 mt-1 items-center">
-                                        <p className="text-gray w-full md:w-[250px] text-center">{e.user_email}</p>
-                                        <p className="text-gray w-full md:w-[120px] text-center">{e.crypto_type}</p>
-                                        <p className="text-gray w-full md:w-[150px] text-center">{e.tether}</p>
-                                        <p className="text-gray w-full md:w-[400px] text-xs md:text-base text-center">{e.wallet}</p>
-                                        <p className="text-gray w-full md:w-[150px] text-center">{e.time}</p>
+                                    <div key={index} className="flex flex-col md:flex-row justify-between space-y-3 md:space-y-0 py-3 mt-1 items-start md:items-center">
+                                        <p className="text-mainBlue w-full md:w-[250px] text-left md:text-center">{e.user_email}</p>
+                                        <p className="text-gray w-full md:w-[100px] text-left text-xs md:text-center">{e.crypto_type}</p>
+                                        <p className="text-gray w-full md:w-[150px] text-left md:text-center">{e.tether}</p>
+                                        <p className="text-gray w-full md:w-[400px] text-left text-xs md:text-center">{e.wallet}</p>
+                                        <p className="text-gray w-full md:w-[160px] text-left md:text-center">{e.time}</p>
                                     </div>
                                 )
                             })}
@@ -1439,7 +1405,7 @@ export default function Admin() {
                         {!withdraws || withdraws.length === 0 ? <div className="flex h-full flex-row justify-center items-center space-x-5">
                             <FaBoxArchive size={50} color="#7790A6" />
                             <p className="text-xl font-bold text-softBlue">Ticket Box Is Empty</p>
-                        </div> : <div className="overflow-y-auto divide-y-2 divide-yellow md:divide-y-0">
+                        </div> : <div className="overflow-y-auto divide-y-2 divide-mainBlue md:divide-y-0">
                             {withdraws.slice().reverse().map((e, index) => {
                                 return (
                                     <div key={index} className="flex flex-col md:flex-row justify-between space-y-2 md:space-y-0 py-3 mt-1 items-center">
@@ -1447,11 +1413,15 @@ export default function Admin() {
                                         <p className="text-gray w-full md:w-[80px]  text-center">{e.tether}</p>
                                         <p className="text-gray w-full md:w-[100px] text-xs text-center">{e.time}</p>
                                         <p className="text-gray w-full md:w-[300px] text-xs text-center">{e.wallet}</p>
-                                        <div className="w-[80px]">{(e.status === 1 && <div className="flex justify-center items-center space-x-1 bg-blue rounded-md px-2 py-1"><p className="text-white font-bold">Pending</p></div>) ||
+                                        <div className="w-32 md:w-[80px]">{(e.status === 1 && <div className="flex justify-center items-center space-x-1 bg-blue rounded-md px-2 py-1"><p className="text-white font-bold">Pending</p></div>) ||
                                             (e.status === 3 && <div className="flex justify-center items-center space-x-1 bg-tradeRed rounded-md px-2 py-1"><p className="text-white font-bold">Reject</p></div>)
                                             || (e.status === 2 && <div className="flex justify-center items-center space-x-1 bg-tradeGreen rounded-md px-2 py-1"><p className="text-white font-bold">Accept</p></div>)}</div>
-                                        <div className="w-[50px] flex justify-center items-center">
-                                            <button onClick={() => setwithdrawDetail(e)} className="p-1 justify-center items-center flex bg-tradeRed rounded-md">
+                                        <div className="w-32 md:w-[50px] flex justify-center items-center">
+                                            <button onClick={() => setwithdrawDetail(e)} className="hidden md:flex p-1 justify-center items-center bg-tradeRed rounded-md">
+                                                <FaPen color="white" size={15} />
+                                            </button>
+                                            <button onClick={() => setwithdrawDetail(e)} className="flex md:hidden p-1 w-32 justify-center items-center  bg-mainBlue rounded-md space-x-2">
+                                                <p className="font-black text-base">Open Info</p>
                                                 <FaPen color="white" size={15} />
                                             </button>
                                         </div>
@@ -1529,7 +1499,7 @@ export default function Admin() {
                                 <p className="font-bold text-softBlue">Token Buyers</p>
                             </div>
                         </div>
-                        <div className="flex flex-row justify-between items-center py-3 pr-4">
+                        <div className="flex flex-row justify-between items-center py-3 pr-4 text-xs md:text-base">
                             <p className="font-medium text-softBlue w-fit md:w-[250px] text-center">User</p>
                             <p className="font-medium text-softBlue w-fit md:w-[200px] text-center">Tether</p>
                             <p className="font-medium text-softBlue w-fit md:w-[150px] text-center">Time</p>
@@ -1539,15 +1509,15 @@ export default function Admin() {
                         {!SellAndBuy || SellAndBuy.buy.length === 0 ? <div className="flex h-full flex-row justify-center items-center space-x-5">
                             <FaBoxArchive size={50} color="#7790A6" />
                             <p className="text-xl font-bold text-softBlue">Buyers Box Is Empty</p>
-                        </div> : <div className="overflow-y-auto divide-y-2 divide-yellow md:divide-y-0">
+                        </div> : <div className="overflow-y-auto divide-y-2 divide-mainBlue md:divide-y-0">
                             {SellAndBuy.buy.slice().reverse().map((e, index) => {
                                 return (
-                                    <div key={index} className="flex flex-col md:flex-row justify-between py-3 space-y-2 md:space-y-0 font-bold mt-1 items-center">
-                                        <p className="text-tradeGreen w-full text-xs md:w-[250px] text-center">{e.user}</p>
-                                        <p className="text-tradeGreen w-full text-xs md:w-[200px] text-center">{e.tether}</p>
-                                        <p className="text-tradeGreen w-full text-xs md:w-[150px] text-center">{e.time}</p>
-                                        <p className="text-tradeGreen w-full text-xs md:w-[200px] text-center">{e.tokenRecive}</p>
-                                        <p className="text-tradeGreen w-full text-xs md:w-[150px] text-center">{e.tokenPrice}</p>
+                                    <div key={index} className="flex flex-col md:flex-row justify-between py-3 space-y-2 md:space-y-0 font-bold mt-1 items-start md:items-center">
+                                        <p className="text-greenButton w-full text-xs md:w-[250px] text-start md:text-center">{e.user}</p>
+                                        <p className="text-greenButton w-full text-xs md:w-[200px] text-start md:text-center">{e.tether}</p>
+                                        <p className="text-greenButton w-full text-xs md:w-[150px] text-start md:text-center">{e.time}</p>
+                                        <p className="text-greenButton w-full text-xs md:w-[200px] text-start md:text-center">{e.tokenRecive}</p>
+                                        <p className="text-greenButton w-full text-xs md:w-[150px] text-start md:text-center">{e.tokenPrice}</p>
                                     </div>
                                 )
                             })}
@@ -1560,7 +1530,7 @@ export default function Admin() {
                                 <p className="font-bold text-softBlue">Token Sellers</p>
                             </div>
                         </div>
-                        <div className="flex flex-row justify-between items-center py-3 pr-4">
+                        <div className="flex flex-row justify-between items-center py-3 pr-4 text-xs md:text-base">
                             <p className="font-medium text-softBlue w-fit md:w-[250px] text-center">User</p>
                             <p className="font-medium text-softBlue w-fit md:w-[200px] text-center">Tether Recive</p>
                             <p className="font-medium text-softBlue w-fit md:w-[150px] text-center">Time</p>
@@ -1570,15 +1540,15 @@ export default function Admin() {
                         {!SellAndBuy || SellAndBuy.sell.length === 0 ? <div className="flex h-full flex-row justify-center items-center space-x-5">
                             <FaBoxArchive size={50} color="#7790A6" />
                             <p className="text-xl font-bold text-softBlue">Sellers Box Is Empty</p>
-                        </div> : <div className="overflow-y-auto divide-y-2 divide-yellow md:divide-y-0">
+                        </div> : <div className="overflow-y-auto divide-y-2 divide-mainBlue md:divide-y-0">
                             {SellAndBuy.sell.slice().reverse().map((e, index) => {
                                 return (
-                                    <div key={index} className="flex flex-col md:flex-row justify-between py-3 space-y-2 md:space-y-0 font-bold mt-1 items-center">
-                                        <p className="text-tradeRed w-full md:w-[250px] text-xs text-center">{e.user}</p>
-                                        <p className="text-tradeRed w-full md:w-[200px] text-xs text-center">{e.tetherRecive}</p>
-                                        <p className="text-tradeRed w-full md:w-[150px] text-xs text-center">{e.time}</p>
-                                        <p className="text-tradeRed w-full md:w-[200px] text-xs text-center">{e.token}</p>
-                                        <p className="text-tradeRed w-full md:w-[150px] text-xs text-center">{e.tokenPrice}</p>
+                                    <div key={index} className="flex flex-col md:flex-row justify-between py-3 space-y-2 md:space-y-0 font-bold mt-1 items-start md:items-center">
+                                        <p className="text-tradeRed w-full md:w-[250px] text-xs text-start md:text-center">{e.user}</p>
+                                        <p className="text-tradeRed w-full md:w-[200px] text-xs text-start md:text-center">{e.tetherRecive}</p>
+                                        <p className="text-tradeRed w-full md:w-[150px] text-xs text-start md:text-center">{e.time}</p>
+                                        <p className="text-tradeRed w-full md:w-[200px] text-xs text-start md:text-center">{e.token}</p>
+                                        <p className="text-tradeRed w-full md:w-[150px] text-xs text-start md:text-center">{e.tokenPrice}</p>
                                     </div>
                                 )
                             })}

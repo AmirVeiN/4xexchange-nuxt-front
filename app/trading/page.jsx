@@ -4,14 +4,18 @@ import { createChart, ColorType } from 'lightweight-charts';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import LoadingPage from '../../components/loading';
-import { BuyUSDTClient, SellUSDTClient, GetSellAndBuyClient, GetChartDetail, GetSellAndBuyPublic, ChartData } from "../GlobalRedux/Features/userSlice";
+import { BuyUSDTClient, SellUSDTClient, getUser, GetSellAndBuyClient, GetChartDetail, GetSellAndBuyPublic, ChartData } from "../GlobalRedux/Features/userSlice";
 import Popup from '../../components/modal';
 import { IoInformationCircleSharp } from "react-icons/io5";
 import { FaBoxArchive } from "react-icons/fa6";
 import Link from 'next/link';
 import { GoAlertFill } from "react-icons/go";
 import { toast } from 'sonner';
-
+import WebSocketComponent from "../../components/chart"
+import Image from "next/image";
+import logo from "../../public/logo.png"
+import { SiTether } from "react-icons/si";
+import { FaCircleCheck } from "react-icons/fa6";
 
 export default function ChartComponent() {
 
@@ -20,6 +24,18 @@ export default function ChartComponent() {
     const [showMessage2, setShowMessage2] = useState(false);
     const [chartTime, setChartTime] = useState("5M")
     const [switchButton, setSwitchButton] = useState(false);
+    const [lastClosePrice, setLastClosePrice] = useState(null);
+    const [volume24h, setVolume24h] = useState(null);
+
+    console.log(volume24h);
+
+    const handleLastClosePriceUpdate = (price) => {
+        setLastClosePrice(price);
+    };
+
+    const handleVolume24hUpdate = (volume) => {
+        setVolume24h(volume);
+    };
 
     const ChartTimeHandler = (time) => {
         setChartTime(time)
@@ -33,37 +49,17 @@ export default function ChartComponent() {
     const [SellUSDT, setSellUSDT] = useState("");
     const handleSellUSDT = (e) => setSellUSDT(e.target.value);
 
-    const data = useSelector((state) => state.user.chartData)
-    const price = useSelector((state) => state.user.price)
     const user = useSelector((state) => state.user.user)
     const infoClient = useSelector((state) => state.user.SellAndBuyClient)
     const infoPublic = useSelector((state) => state.user.SellAndBuyPublic)
 
-    const chartContainerRef = useRef();
-
 
     useEffect(() => {
 
-        setInterval(() => {
-            dispach(ChartData());
-            dispach(GetChartDetail());
-        }, 30000);
-
-        // return () => clearInterval(intervalId);
-
-    }, [dispach]);
-
-
-    useEffect(() => {
-
-        if (!data) {
-            dispach(ChartData());
+        if (!user) {
+            dispach(getUser());
             return;
-        }
 
-        if (!price) {
-            dispach(GetChartDetail());
-            return;
         }
 
         if (!infoPublic) {
@@ -79,95 +75,12 @@ export default function ChartComponent() {
             }
         }
 
-        const handleResize = () => {
-            chart.applyOptions({ width: chartContainerRef.current.clientWidth });
-        };
+    }, [infoClient, infoPublic, dispach, user]);
 
 
-        const chart = createChart(chartContainerRef.current, {
-            layout: {
-                background: { type: ColorType.Solid, color: 'transparent' },
-                textColor: "white",
-            },
-
-            height: 500,
-            timeScale: {
-                timeVisible: true,
-            },
-            localization: {
-                timeFormatter: businessDayOrTimestamp => {
-                    return Date(businessDayOrTimestamp);
-                },
-            }
-        });
-
-
-        chart.timeScale().fitContent();
-
-        const newSeries = chart.addAreaSeries({
-            priceFormat: {
-                type: 'price',
-                precision: 9,
-                minMove: 0.00000001,
-            }, lineColor: '#feb72f', topColor: '#1405FF', bottomColor: 'rgba(41, 98, 255, 0.28)'
-        });
-
-
-        const newData = data.map((e) => {
-            return { time: Date.parse(e.time) / 1000, value: e.value }
-        })
-
-
-        function fiveMin() {
-
-            const datas = newData.filter((item, index) => index % 5 === 0)
-            const last = data[data.length - 1];
-            const last2 = { "time": Date.parse(last['time']) / 1000, "value": last['value'] }
-            if (datas[datas.length - 1]['time'] !== last2['time']) {
-                datas.push(last2)
-            }
-            return datas
-        }
-
-        function oneHour() {
-
-            const datas = newData.filter((item, index) => index % 60 === 0)
-            const last = data[data.length - 1];
-            const last2 = { "time": Date.parse(last['time']) / 1000, "value": last['value'] }
-            if (datas[datas.length - 1]['time'] !== last2['time']) {
-                datas.push(last2)
-            }
-            return datas
-        }
-
-        function oneDay() {
-
-            const datas = newData.filter((item, index) => index % 1440 === 0)
-            const last = data[data.length - 1];
-            const last2 = { "time": Date.parse(last['time']) / 1000, "value": last['value'] }
-            if (datas[datas.length - 1]['time'] !== last2['time']) {
-                datas.push(last2)
-            }
-            return datas
-        }
-
-        const fiveMinuteData = (chartTime === "1D" && oneDay()) || (chartTime === "1H" && oneHour()) || (chartTime === "5M" && fiveMin())
-
-        newSeries.setData(fiveMinuteData);
-
-        window.addEventListener('resize', handleResize);
-
-        return () => {
-            window.removeEventListener('resize', handleResize);
-            chart.remove();
-        };
-    }, [chartTime, data, price, infoClient, infoPublic,dispach,user]);
-
-
-    if ((!data && !infoPublic || !price) || (user && !infoClient)) {
+    if ((!infoPublic) || (user && !infoClient)) {
         return <LoadingPage />
     }
-
 
     if (!infoPublic) {
         dispach(GetSellAndBuyPublic());
@@ -178,7 +91,7 @@ export default function ChartComponent() {
 
         if (type === "buy") {
 
-            if (BuyUSDT !== "" && price.price.number) {
+            if (BuyUSDT !== "" && lastClosePrice) {
 
                 setShowMessage(true)
 
@@ -189,7 +102,7 @@ export default function ChartComponent() {
 
         } else if (type === "sell") {
 
-            if (SellUSDT !== "" && price.price.number) {
+            if (SellUSDT !== "" && lastClosePrice) {
 
                 setShowMessage1(true)
 
@@ -268,9 +181,9 @@ export default function ChartComponent() {
             <div className=' bg-white w-[350px] p-5 border-2 border-blue rounded-2xl'>
                 <div className="flex flex-col space-y-5 justify-center items-center text-center w-full">
                     <IoInformationCircleSharp size={150} color='#435fcb' />
-                    <p className='text-2xl font-bold'>Are you Sure?</p>
-                    <p className='font-bold w-full'>Token Spent = {props.tokenRecive}</p>
-                    <p className='font-bold w-full'>Tether Recive = {props.tether}</p>
+                    <p className='text-2xl font-bold text-black'>Are you Sure?</p>
+                    <p className='font-bold w-full text-black'>Token Spent = {props.tokenRecive}</p>
+                    <p className='font-bold w-full text-black'>Tether Recive = {props.tether}</p>
                     <div className='flex flex-row justify-around w-full'>
                         <button className='px-8 py-2 rounded-2xl bg-blue font-medium text-white text-xl' onClick={okPopuop}>Ok</button>
                         <button className='px-5 py-2 rounded-2xl bg-gray font-medium text-white text-xl' onClick={closePopup}>Close</button>
@@ -280,9 +193,9 @@ export default function ChartComponent() {
             <div className=' bg-white w-[350px] p-5 border-2 border-blue rounded-2xl'>
                 <div className="flex flex-col space-y-5 justify-center items-center text-center w-full">
                     <IoInformationCircleSharp size={150} color='#435fcb' />
-                    <p className='text-2xl font-bold'>Are you Sure?</p>
-                    <p className='font-bold w-full'>Tether Spent = {props.tether}</p>
-                    <p className='font-bold w-full'>Token Recive = {props.tokenRecive}</p>
+                    <p className='text-2xl font-bold text-black'>Are you Sure?</p>
+                    <p className='font-bold w-full text-black'>Tether Spent = {props.tether}</p>
+                    <p className='font-bold w-full text-black'>Token Recive = {props.tokenRecive}</p>
                     <div className='flex flex-row justify-around w-full'>
                         <button className='px-8 py-2 rounded-2xl bg-blue font-medium text-white text-xl' onClick={okPopuop}>Ok</button>
                         <button className='px-5 py-2 rounded-2xl bg-gray font-medium text-white text-xl' onClick={closePopup}>Close</button>
@@ -296,127 +209,109 @@ export default function ChartComponent() {
     }
 
     const Message1 = () => {
-        return <Alert type="sell" user={user.email} tether={parseFloat(SellUSDT)} tokenRecive={SellUSDT / price.price.number} tokenPrice={price.price.number} />
+        return <Alert type="sell" user={user.email} tether={parseFloat(SellUSDT)} tokenRecive={SellUSDT / lastClosePrice} tokenPrice={lastClosePrice} />
     }
 
     const Message = () => {
-        return <Alert type="buy" user={user.email} tether={parseFloat(BuyUSDT)} tokenRecive={BuyUSDT / price.price.number} tokenPrice={price.price.number} />
+        return <Alert type="buy" user={user.email} tether={parseFloat(BuyUSDT)} tokenRecive={BuyUSDT / lastClosePrice} tokenPrice={lastClosePrice} />
     }
 
     return (
-        <div className='bg-back dark:bg-black flex flex-col space-y-10 w-full h-full pt-5 relative'>
+        <div className='bg-white flex flex-col space-y-10 w-full h-full pt-2 md:pt-32 relative'>
             <div className={(!showMessage && !showMessage2 && !showMessage1) ? 'flex flex-col w-full justify-center items-center space-y-5' : 'blur-md flex flex-col w-full justify-center items-center space-y-5'}>
-                <div className='flex flex-row space-x-0 lg:space-x-5 w-full justify-center items-start px-6'>
-                    {/* <div className='hidden lg:flex flex-col space-y-2 w-[20%]'>
-                        <div className='w-full p-5 bg-softGray dark:bg-tradeBlue font-bold text-xl rounded-lg text-white'>Buyers</div>
-                        <div className='w-full h-[510px] flex flex-col bg-softGray dark:bg-tradeBlue font-bold text-lg rounded-lg text-white'>
-                            <div className='flex flex-row p-5 justify-between items-center'>
-                                <p>USDT</p>
-                                <p>4X</p>
-                            </div>
-                            <div className="overflow-y-auto">
-                                {infoPublic.buy.slice().reverse().map((e, index) => {
-                                    return (
-                                        <div key={index} className="flex flex-row justify-between px-4 py-1 pb-4 mt-1 items-center">
-                                            <p className="text-tradeGreen text-sm text-start w-[100px]">{e.tether.toString().substring(0, 15)}</p>
-                                            <p className="text-white text-sm text-end w-[100px]">{e.tokenRecive.toString().substring(0, 10)}</p>
-                                        </div>
-                                    )
-                                })}
-                            </div>
-                        </div>
-                    </div> */}
+                <div className='flex flex-row space-x-0 lg:space-x-5 w-full justify-center items-start px-2 lg:px-6'>
                     <div className='flex flex-col space-y-2 w-full'>
-                        <div className='flex flex-col lg:flex-row space-x-3 items-center lg:space-y-0 space-y-5 bg-softGray dark:bg-tradeBlue py-5 px-4 w-full rounded-lg'>
-                            <div className='flex flex-row justify-between items-center'>
-                                <div className='flex flex-row space-x-2'>
-                                    <button onClick={() => ChartTimeHandler("5M")} className={chartTime === "5M" ? `font-bold delay-150 duration-300 ease-in-out text-softGray px-4 py-2 rounded-lg bg-yellowBorder` : `font-bold delay-150 duration-300 ease-in-out text-softGray  px-4 py-2 rounded-lg bg-white`}>
-                                        5m
-                                    </button>
-                                    <button onClick={() => ChartTimeHandler("1H")} className={chartTime === "1H" ? `font-bold delay-150 duration-300 ease-in-out text-softGray px-4 py-2 rounded-lg bg-yellowBorder` : `font-bold delay-150 duration-300 ease-in-out text-softGray  px-4 py-2 rounded-lg bg-white`}>
-                                        1h
-                                    </button>
-                                    <button onClick={() => ChartTimeHandler("1D")} className={chartTime === "1D" ? `font-bold delay-150 duration-300 ease-in-out text-softGray px-4 py-2 rounded-lg bg-yellowBorder` : `font-bold delay-150 duration-300 ease-in-out text-softGray  px-4 py-2 rounded-lg bg-white`}>
-                                        1D
-                                    </button>
+                        <div className='hidden lg:flex flex-row justify-between items-center w-full'>
+                            <div className='flex flex-row space-x-3'>
+                                <div className='flex flex-row justify-center items-center space-x-1'>
+                                    <Image src={logo} alt="" width={25} priority={true} />
+                                    <p className="text-black font-bold">4xToken  /</p>
+                                </div>
+                                <div className='flex flex-row justify-center items-center space-x-1'>
+                                    <SiTether alt="" size={22} color="green" />
+                                    <p className="text-black font-bold">TetherUS(USDT)</p>
                                 </div>
                             </div>
-                            <div className='flex flex-row justify-around items-center w-full'>
-                                <div className='flex flex-row text-white font-bold 3xl:text-2xl 2xl:text-2xl xl:text-base lg:text-base md:text-2xl sm:text-2xl ph:text-xs space-x-2'>
-                                    <p>4X / USDT</p>
+                            <div>
+                                <p className="text-black font-bold">Price : {lastClosePrice}</p>
+                            </div>
+                            <div>
+                                <p className="text-black font-bold">24H Volumes : {volume24h}</p>
+                            </div>
+                            <div className='flex flex-row space-x-1 justify-center items-center'>
+                                <p className="text-black font-bold">Update : </p>
+                                <FaCircleCheck alt="" size={20} color="#21749c" />
+                            </div>
+                        </div>
+                        <div className='flex lg:hidden flex-col space-y-3 text-xs justify-between items-center w-full'>
+                            <div className='flex flex-row justify-between w-full'>
+                                <div className='flex flex-row space-x-3'>
+                                    <div className='flex flex-row justify-center items-center space-x-1'>
+                                        <Image src={logo} alt="" width={25} priority={true} />
+                                        <p className="text-black font-bold">4xToken  /</p>
+                                    </div>
+                                    <div className='flex flex-row justify-center items-center space-x-1'>
+                                        <SiTether alt="" size={22} color="green" />
+                                        <p className="text-black font-bold">TetherUS(USDT)</p>
+                                    </div>
                                 </div>
-                                <div className='flex flex-row text-white font-bold 3xl:text-2xl 2xl:text-2xl xl:text-base lg:text-base md:text-2xl sm:text-2xl ph:text-xs space-x-2'>
-                                    <p>Price : </p>
-                                    <p>{data[data.length - 1]['value']}</p>
+                                <div className='flex flex-row space-x-1 justify-center items-center'>
+                                    <p className="text-black font-bold">Update : </p>
+                                    <FaCircleCheck alt="" size={20} color="#21749c" />
                                 </div>
-                                <div className='flex flex-row text-white font-bold 3xl:text-2xl 2xl:text-2xl xl:text-base lg:text-base md:text-2xl sm:text-2xl ph:text-xs space-x-2'>
-                                    <p>24H Volume : </p>
-                                    <p>${price.volume.number}</p>
+                            </div>
+                            <div className='flex flex-row justify-between w-full'>
+                                <div>
+                                    <p className="text-black font-bold">Price : {lastClosePrice}</p>
+                                </div>
+                                <div>
+                                    <p className="text-black font-bold">24H Volumes : {volume24h}</p>
                                 </div>
                             </div>
                         </div>
-                        <div className='w-full bg-softGray rounded-lg dark:bg-black' ref={chartContainerRef} />
+                        <WebSocketComponent onLastClosePriceUpdate={handleLastClosePriceUpdate} onVolume24hUpdate={handleVolume24hUpdate} />
                     </div>
-                    {/* <div className='hidden lg:flex flex-col space-y-2 w-[20%]'>
-                        <div className='w-full p-5 bg-softGray dark:bg-tradeBlue font-bold text-xl rounded-lg text-white'>Sellers</div>
-                        <div className='w-full h-[510px] flex flex-col bg-softGray dark:bg-tradeBlue font-bold text-lg rounded-lg text-white'>
-                            <div className='flex flex-row p-5 justify-between items-center'>
-                                <p>USDT</p>
-                                <p>4X</p>
-                            </div>
-                            <div className="overflow-y-auto">
-                                {infoPublic.sell.slice().reverse().map((e, index) => {
-                                    return (
-                                        <div key={index} className="flex flex-row justify-between px-4 py-1 pb-4 mt-1 items-center">
-                                            <p className="text-tradeRed text-sm text-start w-[100px]">{e.tetherRecive.toString().substring(0, 15)}</p>
-                                            <p className="text-white text-sm text-end w-[100px]">{e.token.toString().substring(0, 10)}</p>
-                                        </div>
-                                    )
-                                })}
-                            </div>
-                        </div>
-                    </div> */}
                 </div>
-                <div className='flex flex-row space-x-0 lg:space-x-5 w-full justify-center items-start px-5'>
+                <div className='flex flex-row space-x-0 lg:space-x-5 w-full justify-center items-start pb-5 px-5'>
                     <div className='hidden lg:flex flex-col space-y-2 w-[20%]'>
-                        <div className='w-full p-5 bg-softGray dark:bg-tradeBlue font-bold text-xl rounded-lg text-white'>Your Buys</div>
-                        <div className='w-full flex flex-col h-[470px] bg-softGray dark:bg-tradeBlue font-bold text-lg rounded-lg text-white'>
+                        <div className='w-full p-5 bg-white border shadow-mainBlue/20 font-bold text-xl rounded-lg text-mainBlue'>Your Buys</div>
+                        <div className='w-full flex flex-col h-[470px] border bg-white shadow-mainBlue/20 font-bold text-lg rounded-lg text-mainBlue'>
                             <div className='flex flex-row p-5 justify-between items-center'>
                                 <p>USDT</p>
                                 <p>4X</p>
                             </div>
                             {!infoClient || infoClient.buy.length === 0 ? <div className="flex h-full flex-row justify-center items-center space-x-5 px-5">
-                                <FaBoxArchive size={50} color="#7790A6" />
-                                <p className="text-xl font-bold text-softBlue">Buyers Box Is Empty</p>
+                                <FaBoxArchive size={50} color="#21749c" />
+                                <p className="text-xl font-bold text-mainBlue">Box Is Empty</p>
                             </div> : <div className="overflow-y-auto">
                                 {infoClient.buy.slice().reverse().map((e, index) => {
                                     return (
                                         <div key={index} className="flex flex-row justify-between px-4 py-1 pb-4 mt-1 items-center">
                                             <p className="text-tradeGreen text-sm text-start w-[100px]">{e.tether.toString().substring(0, 15)}</p>
-                                            <p className="text-white text-sm text-end w-[100px]">{e.tokenRecive.toString().substring(0, 10)}</p>
+                                            <p className="text-mainBlue text-sm text-end w-[100px]">{e.tokenRecive.toString().substring(0, 10)}</p>
                                         </div>
                                     )
                                 })}
                             </div>}
                         </div>
                     </div>
-                    <div className='hidden lg:flex h-full rounded-lg bg-softGray dark:bg-tradeBlue flex-col lg:flex-row w-full lg:w-[60%] justify-center items-center'>
+                    <div className='hidden lg:flex h-full rounded-lg border border-mainBlue bg-white shadow-mainBlue/20 flex-col lg:flex-row w-full lg:w-[60%] justify-center items-center'>
                         <form onSubmit={(e) => { e.preventDefault(); handleSubmit("buy"); }} className='flex flex-col h-full justify-start items-start w-full lg:w-1/2 p-5'>
-                            <p className='text-xl font-bold text-white py-3'>Buy Token(4X)</p>
+                            <p className='text-xl font-bold text-mainBlue py-3'>Buy Token(4X)</p>
                             <div className="flex flex-row space-x-4 justify-start items-center py-3 w-full">
-                                <p className="shadow-inner rounded-lg text-softBlue font-bold bg-white dark:bg-tableBlue w-[40%] p-2">Tether(USDT)</p>
-                                <p className="shadow-inner rounded-lg text-softBlue font-bold bg-white dark:bg-tableBlue w-[60%] p-2">{user ? user.usdt : 0}</p>
+                                <p className="shadow-inner shadow-mainBlue rounded-lg text-mainBlue font-bold bg-white w-[40%] p-2">Tether(USDT)</p>
+                                <p className="shadow-inner shadow-mainBlue rounded-lg text-mainBlue font-bold bg-white w-[60%] p-2">{user ? user.usdt : 0}</p>
                             </div>
                             <div className="flex flex-row space-x-4 justify-start items-center py-3 w-full">
-                                <p className="shadow-inner rounded-lg text-softBlue font-bold bg-white dark:bg-tableBlue w-[40%] p-2">Token(4X)</p>
-                                <p className="shadow-inner rounded-lg text-softBlue font-bold bg-white dark:bg-tableBlue w-[60%] p-2">{user ? user.token : 0}</p>
+                                <p className="shadow-inner shadow-mainBlue rounded-lg text-mainBlue font-bold bg-white w-[40%] p-2">Token(4X)</p>
+                                <p className="shadow-inner shadow-mainBlue rounded-lg text-mainBlue font-bold bg-white w-[60%] p-2">{user ? user.token : 0}</p>
                             </div>
                             <div className="flex flex-row space-x-4 justify-start items-center py-3 w-full">
-                                <p className="shadow-inner rounded-lg text-softBlue font-bold bg-white dark:bg-tableBlue w-[40%] p-2">Price(4X)</p>
-                                <p className="shadow-inner rounded-lg text-softBlue font-bold bg-white dark:bg-tableBlue w-[60%] p-2">{price.price.number}</p>
+                                <p className="shadow-inner shadow-mainBlue rounded-lg text-mainBlue font-bold bg-white w-[40%] p-2">Price(4X)</p>
+                                <p className="shadow-inner shadow-mainBlue rounded-lg text-mainBlue font-bold bg-white w-[60%] p-2">{lastClosePrice}</p>
                             </div>
                             <div className='flex flex-col w-full space-y-2 py-2'>
-                                <div className='flex justify-between text-white font-medium'>
+                                <div className='flex justify-between text-mainBlue font-medium'>
                                     <p>USDT Amount</p>
                                 </div>
                                 <div className='flex flex-row space-x-2'>
@@ -427,21 +322,21 @@ export default function ChartComponent() {
                                         type="number"
                                         value={BuyUSDT}
                                         onChange={handleBuyUSDT}
-                                        className="w-full p-2 focus:ring-4 focus:border-none focus:ring-tableBlue text-tableBlue dark:text-white rounded-lg bg-white dark:bg-tableBlue"
+                                        className="w-full p-2 text-mainBlue shadow-mainBlue shadow-inner rounded-lg bg-white "
                                     />
-                                    <button type='button' onClick={() => setBuyUSDT(user.usdt)} className='bg-tradeGreen px-4 rounded-lg font-bold text-black'>
+                                    <button type='button' onClick={() => setBuyUSDT(user.usdt)} className='bg-tradeGreen px-4 rounded-lg font-bold text-white'>
                                         MAX
                                     </button>
                                 </div>
                             </div>
                             <div className='flex flex-col w-full space-y-2 py-2'>
-                                <div className='flex justify-between text-white font-medium'>
+                                <div className='flex justify-between  text-mainBlue font-medium'>
                                     <p>Your Token Recive</p>
                                 </div>
                                 <p
-                                    className="w-full p-2 focus:ring-4 focus:border-none focus:ring-tableBlue text-tableBlue dark:text-white rounded-lg bg-white dark:bg-tableBlue"
+                                    className="w-full shadow-mainBlue p-2 text-mainBlue shadow-inner rounded-lg bg-white"
                                 >
-                                    {BuyUSDT ? BuyUSDT / price.price.number : 0}
+                                    {BuyUSDT ? BuyUSDT / lastClosePrice : 0}
                                 </p>
                             </div>
                             {user && user.user_type !== 4 && <button type='submit' className='w-full py-4 text-2xl rounded-lg text-white font-bold bg-tradeGreen mt-5'>
@@ -451,26 +346,26 @@ export default function ChartComponent() {
                                 Login
                             </Link>}
                             {user && user.user_type === 4 && <Link href="/pannel" className='w-full space-x-2 flex flex-row justify-center items-center py-4 text-2xl rounded-lg text-white font-bold bg-tradeGreen mt-5'>
-                                <p>Yor Are Ban</p>
+                                <p>You Are Ban</p>
                                 <GoAlertFill size={30} />
                             </Link>}
                         </form>
                         <form onSubmit={(e) => { e.preventDefault(); handleSubmit("sell"); }} className='flex flex-col h-full justify-start items-start w-full lg:w-1/2 p-5'>
-                            <p className='text-xl font-bold text-white py-3'>Sell Token(4X)</p>
+                            <p className='text-xl font-bold text-mainBlue py-3'>Sell Token(4X)</p>
                             <div className="flex flex-row space-x-4 justify-start items-center py-3 w-full">
-                                <p className="shadow-inner rounded-lg text-softBlue font-bold bg-white dark:bg-tableBlue w-[40%] p-2">Tether(USDT)</p>
-                                <p className="shadow-inner rounded-lg text-softBlue font-bold bg-white dark:bg-tableBlue w-[60%] p-2">{user ? user.usdt : 0}</p>
+                                <p className="shadow-inner shadow-mainBlue rounded-lg text-mainBlue font-bold bg-white w-[40%] p-2">Tether(USDT)</p>
+                                <p className="shadow-inner shadow-mainBlue rounded-lg text-mainBlue font-bold bg-white w-[60%] p-2">{user ? user.usdt : 0}</p>
                             </div>
                             <div className="flex flex-row space-x-4 justify-start items-center py-3 w-full">
-                                <p className="shadow-inner rounded-lg text-softBlue font-bold bg-white dark:bg-tableBlue w-[40%] p-2">Token(4X)</p>
-                                <p className="shadow-inner rounded-lg text-softBlue font-bold bg-white dark:bg-tableBlue w-[60%] p-2">{user ? user.token : 0}</p>
+                                <p className="shadow-inner shadow-mainBlue rounded-lg text-mainBlue font-bold bg-white w-[40%] p-2">Token(4X)</p>
+                                <p className="shadow-inner shadow-mainBlue rounded-lg text-mainBlue font-bold bg-white w-[60%] p-2">{user ? user.token : 0}</p>
                             </div>
                             <div className="flex flex-row space-x-4 justify-start items-center py-3 w-full">
-                                <p className="shadow-inner rounded-lg text-softBlue font-bold bg-white dark:bg-tableBlue w-[40%] p-2">Price(4X)</p>
-                                <p className="shadow-inner rounded-lg text-softBlue font-bold bg-white dark:bg-tableBlue w-[60%] p-2">{price.price.number}</p>
+                                <p className="shadow-inner shadow-mainBlue rounded-lg text-mainBlue font-bold bg-white w-[40%] p-2">Price(4X)</p>
+                                <p className="shadow-inner shadow-mainBlue rounded-lg text-mainBlue font-bold bg-white w-[60%] p-2">{lastClosePrice}</p>
                             </div>
                             <div className='flex flex-col w-full space-y-2 py-2'>
-                                <div className='flex justify-between text-white font-medium'>
+                                <div className='flex justify-between text-mainBlue font-medium'>
                                     <p>USDT Amount</p>
                                 </div>
                                 <div className='flex flex-row space-x-2'>
@@ -481,21 +376,21 @@ export default function ChartComponent() {
                                         type="number"
                                         value={SellUSDT}
                                         onChange={handleSellUSDT}
-                                        className="w-full p-2 focus:ring-4 focus:border-none focus:ring-tableBlue text-tableBlue dark:text-white rounded-lg bg-white dark:bg-tableBlue"
+                                        className="w-full p-2 shadow-mainBlue text-mainBlue rounded-lg bg-white shadow-inner "
                                     />
-                                    <button type='button' onClick={() => setSellUSDT(user.token * price.price.number)} className='bg-tradeRed px-4 rounded-lg font-bold text-black'>
+                                    <button type='button' onClick={() => setSellUSDT(user.token * lastClosePrice)} className='bg-tradeRed px-4 rounded-lg font-bold text-white'>
                                         MAX
                                     </button>
                                 </div>
                             </div>
                             <div className='flex flex-col w-full space-y-2 py-2'>
-                                <div className='flex justify-between text-white font-medium'>
+                                <div className='flex justify-between text-mainBlue font-medium'>
                                     <p>Your Token Sell</p>
                                 </div>
                                 <p
-                                    className="w-full p-2 focus:ring-4 focus:border-none focus:ring-tableBlue text-tableBlue dark:text-white rounded-lg bg-white dark:bg-tableBlue"
+                                    className="w-full shadow-mainBlue p-2 shadow-inner text-mainBlue rounded-lg bg-white "
                                 >
-                                    {SellUSDT ? SellUSDT / price.price.number : 0}
+                                    {SellUSDT ? SellUSDT / lastClosePrice : 0}
                                 </p>
                             </div>
                             {user && user.user_type !== 4 && <button type='submit' className='w-full py-4 text-2xl rounded-lg text-white font-bold bg-tradeRed mt-5'>
@@ -505,32 +400,32 @@ export default function ChartComponent() {
                                 Login
                             </Link>}
                             {user && user.user_type === 4 && <Link href="/pannel" className='w-full space-x-2 flex flex-row justify-center items-center py-4 text-2xl rounded-lg text-white font-bold bg-tradeRed mt-5'>
-                                <p>Yor Are Ban</p>
+                                <p>You Are Ban</p>
                                 <GoAlertFill size={30} />
                             </Link>}
                         </form>
                     </div>
-                    <div className='mb-24 lg:mb-0 flex lg:hidden h-full rounded-lg bg-softGray dark:bg-tradeBlue flex-col lg:flex-row w-full lg:w-[60%] justify-center items-center'>
+                    <div className='mb-24 lg:mb-0 flex lg:hidden h-full rounded-lg bg-white border border-mainBlue flex-col lg:flex-row w-full lg:w-[60%] justify-center items-center'>
                         <div className='flex flex-row space-x-0 justify-end pt-5 pr-5 w-full'>
                             <button onClick={() => setSwitchButton(false)} className={!switchButton ? 'px-6 py-3 text-white text-xl font-bold bg-tradeGreen rounded-l-md' : 'px-6 py-3 text-softGray text-xl font-bold bg-white rounded-l-md'}>Buy</button>
                             <button onClick={() => setSwitchButton(true)} className={switchButton ? 'px-6 py-3 text-white text-xl font-bold bg-tradeRed rounded-r-md' : 'px-6 py-3 text-softGray text-xl font-bold bg-white rounded-r-md'}>Sell</button>
                         </div>
                         {!switchButton ? <form onSubmit={(e) => { e.preventDefault(); handleSubmit("buy"); }} className='flex flex-col h-full justify-start items-start w-full lg:w-1/2 p-5'>
-                            <p className='text-xl font-bold text-white py-3'>Buy Token(4X)</p>
+                            <p className='text-xl font-bold text-mainBlue py-3'>Buy Token(4X)</p>
                             <div className="flex flex-row space-x-4 justify-start items-center py-3 w-full">
-                                <p className="shadow-inner rounded-lg text-softBlue font-bold bg-white dark:bg-tableBlue w-[40%] p-2">Tether(USDT)</p>
-                                <p className="shadow-inner rounded-lg text-softBlue font-bold bg-white dark:bg-tableBlue w-[60%] p-2">{user ? user.usdt : 0}</p>
+                                <p className="shadow-inner shadow-mainBlue rounded-lg text-mainBlue font-bold bg-white w-[40%] p-2">Tether(USDT)</p>
+                                <p className="shadow-inner shadow-mainBlue rounded-lg text-mainBlue font-bold bg-white w-[60%] p-2">{user ? user.usdt : 0}</p>
                             </div>
                             <div className="flex flex-row space-x-4 justify-start items-center py-3 w-full">
-                                <p className="shadow-inner rounded-lg text-softBlue font-bold bg-white dark:bg-tableBlue w-[40%] p-2">Token(4X)</p>
-                                <p className="shadow-inner rounded-lg text-softBlue font-bold bg-white dark:bg-tableBlue w-[60%] p-2">{user ? user.token : 0}</p>
+                                <p className="shadow-inner shadow-mainBlue rounded-lg text-mainBlue font-bold bg-white w-[40%] p-2">Token(4X)</p>
+                                <p className="shadow-inner shadow-mainBlue rounded-lg text-mainBlue font-bold bg-white w-[60%] p-2">{user ? user.token : 0}</p>
                             </div>
                             <div className="flex flex-row space-x-4 justify-start items-center py-3 w-full">
-                                <p className="shadow-inner rounded-lg text-softBlue font-bold bg-white dark:bg-tableBlue w-[40%] p-2">Price(4X)</p>
-                                <p className="shadow-inner rounded-lg text-softBlue font-bold bg-white dark:bg-tableBlue w-[60%] p-2">{price.price.number}</p>
+                                <p className="shadow-inner shadow-mainBlue rounded-lg text-mainBlue font-bold bg-white w-[40%] p-2">Price(4X)</p>
+                                <p className="shadow-inner shadow-mainBlue rounded-lg text-mainBlue font-bold bg-white w-[60%] p-2">{lastClosePrice}</p>
                             </div>
                             <div className='flex flex-col w-full space-y-2 py-2'>
-                                <div className='flex justify-between text-white font-medium'>
+                                <div className='flex justify-between text-mainBlue font-medium'>
                                     <p>USDT Amount</p>
                                 </div>
                                 <div className='flex flex-row space-x-2'>
@@ -541,21 +436,21 @@ export default function ChartComponent() {
                                         type="number"
                                         value={BuyUSDT}
                                         onChange={handleBuyUSDT}
-                                        className="w-full p-2 focus:ring-4 focus:border-none focus:ring-tableBlue text-tableBlue dark:text-white rounded-lg bg-white dark:bg-tableBlue"
+                                        className="w-full p-2 shadow-mainBlue text-mainBlue rounded-lg bg-white shadow-inner"
                                     />
-                                    <button type='button' onClick={() => setBuyUSDT(user.usdt)} className='bg-tradeGreen px-4 rounded-lg font-bold text-white dark:text-black'>
+                                    <button type='button' onClick={() => setBuyUSDT(user.usdt)} className='bg-tradeGreen px-4 rounded-lg font-bold text-white'>
                                         MAX
                                     </button>
                                 </div>
                             </div>
                             <div className='flex flex-col w-full space-y-2 py-2'>
-                                <div className='flex justify-between text-white font-medium'>
+                                <div className='flex justify-between text-mainBlue font-medium'>
                                     <p>Your Token Recive</p>
                                 </div>
                                 <p
-                                    className="w-full p-2 focus:ring-4 focus:border-none focus:ring-tableBlue text-tableBlue dark:text-white rounded-lg bg-white dark:bg-tableBlue"
+                                    className="w-full shadow-mainBlue p-2 bg-white shadow-inner text-mainBlue rounded-lg"
                                 >
-                                    {BuyUSDT ? BuyUSDT / price.price.number : 0}
+                                    {BuyUSDT ? BuyUSDT / lastClosePrice : 0}
                                 </p>
                             </div>
                             {user && user.user_type !== 4 && <button type='submit' className='w-full py-4 text-2xl rounded-lg text-white font-bold bg-tradeGreen mt-5'>
@@ -565,25 +460,25 @@ export default function ChartComponent() {
                                 Login
                             </Link>}
                             {user && user.user_type === 4 && <Link href="/pannel" className='w-full space-x-2 flex flex-row justify-center items-center py-4 text-2xl rounded-lg text-white font-bold bg-tradeGreen mt-5'>
-                                <p>Yor Are Ban</p>
+                                <p>You Are Ban</p>
                                 <GoAlertFill size={30} />
                             </Link>}
                         </form> : <form onSubmit={(e) => { e.preventDefault(); handleSubmit("sell"); }} className='flex flex-col h-full justify-start items-start w-full lg:w-1/2 p-5'>
-                            <p className='text-xl font-bold text-white py-3'>Sell Token(4X)</p>
+                            <p className='text-xl font-bold text-mainBlue py-3'>Sell Token(4X)</p>
                             <div className="flex flex-row space-x-4 justify-start items-center py-3 w-full">
-                                <p className="shadow-inner rounded-lg text-softBlue font-bold bg-white dark:bg-tableBlue w-[40%] p-2">Tether(USDT)</p>
-                                <p className="shadow-inner rounded-lg text-softBlue font-bold bg-white dark:bg-tableBlue w-[60%] p-2">{user ? user.usdt : 0}</p>
+                                <p className="shadow-inner shadow-mainBlue rounded-lg text-mainBlue font-bold bg-white w-[40%] p-2">Tether(USDT)</p>
+                                <p className="shadow-inner shadow-mainBlue rounded-lg text-mainBlue font-bold bg-white w-[60%] p-2">{user ? user.usdt : 0}</p>
                             </div>
                             <div className="flex flex-row space-x-4 justify-start items-center py-3 w-full">
-                                <p className="shadow-inner rounded-lg text-softBlue font-bold bg-white dark:bg-tableBlue w-[40%] p-2">Token(4X)</p>
-                                <p className="shadow-inner rounded-lg text-softBlue font-bold bg-white dark:bg-tableBlue w-[60%] p-2">{user ? user.token : 0}</p>
+                                <p className="shadow-inner shadow-mainBlue rounded-lg text-mainBlue font-bold bg-white w-[40%] p-2">Token(4X)</p>
+                                <p className="shadow-inner shadow-mainBlue rounded-lg text-mainBlue font-bold bg-white w-[60%] p-2">{user ? user.token : 0}</p>
                             </div>
                             <div className="flex flex-row space-x-4 justify-start items-center py-3 w-full">
-                                <p className="shadow-inner rounded-lg text-softBlue font-bold bg-white dark:bg-tableBlue w-[40%] p-2">Price(4X)</p>
-                                <p className="shadow-inner rounded-lg text-softBlue font-bold bg-white dark:bg-tableBlue w-[60%] p-2">{price.price.number}</p>
+                                <p className="shadow-inner shadow-mainBlue rounded-lg text-mainBlue font-bold bg-white w-[40%] p-2">Price(4X)</p>
+                                <p className="shadow-inner shadow-mainBlue rounded-lg text-mainBlue font-bold bg-white w-[60%] p-2">{lastClosePrice}</p>
                             </div>
                             <div className='flex flex-col w-full space-y-2 py-2'>
-                                <div className='flex justify-between text-white font-medium'>
+                                <div className='flex justify-between text-mainBlue font-medium'>
                                     <p>USDT Amount</p>
                                 </div>
                                 <div className='flex flex-row space-x-2'>
@@ -594,21 +489,21 @@ export default function ChartComponent() {
                                         type="number"
                                         value={SellUSDT}
                                         onChange={handleSellUSDT}
-                                        className="w-full p-2 focus:ring-4 focus:border-none focus:ring-tableBlue text-tableBlue dark:text-white rounded-lg bg-white dark:bg-tableBlue"
+                                        className="w-full shadow-mainBlue p-2 shadow-inner text-mainBlue rounded-lg bg-white"
                                     />
-                                    <button type='button' onClick={() => setSellUSDT(user.token * price.price.number)} className='bg-tradeRed px-4 rounded-lg font-bold text-white dark:text-black'>
+                                    <button type='button' onClick={() => setSellUSDT(user.token * lastClosePrice)} className='bg-tradeRed px-4 rounded-lg font-bold text-white dark:text-black'>
                                         MAX
                                     </button>
                                 </div>
                             </div>
                             <div className='flex flex-col w-full space-y-2 py-2'>
-                                <div className='flex justify-between text-white font-medium'>
+                                <div className='flex shadow-mainBlue justify-between text-mainBlue font-medium'>
                                     <p>Your Token Sell</p>
                                 </div>
                                 <p
-                                    className="w-full p-2 focus:ring-4 focus:border-none focus:ring-tableBlue text-tableBlue dark:text-white rounded-lg bg-white dark:bg-tableBlue"
+                                    className="w-full p-2 text-tableBlue shadow-inner rounded-lg bg-white"
                                 >
-                                    {SellUSDT ? SellUSDT / price.price.number : 0}
+                                    {SellUSDT ? SellUSDT / lastClosePrice : 0}
                                 </p>
                             </div>
                             {user && user.user_type !== 4 && <button type='submit' className='w-full py-4 text-2xl rounded-lg text-white font-bold bg-tradeRed mt-5'>
@@ -624,21 +519,21 @@ export default function ChartComponent() {
                         </form>}
                     </div>
                     <div className='hidden lg:flex flex-col space-y-2 w-[20%]'>
-                        <div className='w-full p-5 bg-softGray dark:bg-tradeBlue font-bold text-xl rounded-lg text-white'>Your Sales</div>
-                        <div className='w-full flex flex-col h-[470px] bg-softGray dark:bg-tradeBlue font-bold text-lg rounded-lg text-white'>
+                        <div className='w-full p-5 bg-white border shadow-mainBlue/20 font-bold text-xl rounded-lg text-mainBlue'>Your Sales</div>
+                        <div className='w-full flex flex-col border shadow-mainBlue/20 h-[470px] bg-white font-bold text-lg rounded-lg text-mainBlue'>
                             <div className='flex flex-row justify-between p-5 items-center'>
                                 <p>USDT</p>
                                 <p>4X</p>
                             </div>
                             {!infoClient || infoClient.sell.length === 0 ? <div className="flex h-full flex-row justify-center items-center space-x-5 px-5">
-                                <FaBoxArchive size={50} color="#7790A6" />
-                                <p className="text-xl font-bold text-softBlue">Sellers Box Is Empty</p>
+                                <FaBoxArchive size={50} color="#21749c" />
+                                <p className="text-xl font-bold text-mainBlue">Box Is Empty</p>
                             </div> : <div className="overflow-y-auto">
                                 {infoClient.sell.slice().reverse().map((e, index) => {
                                     return (
                                         <div key={index} className="flex flex-row justify-between px-4 py-1 pb-4 mt-1 items-center">
                                             <p className="text-tradeRed text-sm text-start w-[100px]">{e.tetherRecive.toString().substring(0, 15)}</p>
-                                            <p className="text-white text-sm text-end w-[100px]">{e.token.toString().substring(0, 10)}</p>
+                                            <p className="text-mainBlue text-sm text-end w-[100px]">{e.token.toString().substring(0, 10)}</p>
                                         </div>
                                     )
                                 })}
@@ -647,58 +542,18 @@ export default function ChartComponent() {
                     </div>
                 </div>
             </div>
-            {/* <div className='flex lg:hidden flex-row space-x-1 w-full justify-center items-start px-5 pb-24'>
-                <div className='flex flex-col space-y-2 w-full'>
-                    <div className='w-full p-5 bg-softGray dark:bg-tradeBlue font-bold text-xl rounded-lg text-white'>Buyers</div>
-                    <div className='w-full h-[510px] flex flex-col bg-softGray dark:bg-tradeBlue font-bold text-lg rounded-lg text-white'>
-                        <div className='flex flex-row p-5 justify-between items-center'>
-                            <p>USDT</p>
-                            <p>4X</p>
-                        </div>
-                        <div className="overflow-y-auto">
-                            {infoPublic.buy.slice().reverse().map((e, index) => {
-                                return (
-                                    <div key={index} className="flex flex-row justify-between px-4 py-1 pb-4 mt-1 items-center">
-                                        <p className="text-tradeGreen text-xs text-start w-full">{e.tether.toString().substring(0, 9)}</p>
-                                        <p className="text-white text-xs text-end w-full">{e.tokenRecive.toString().substring(0, 9)}</p>
-                                    </div>
-                                )
-                            })}
-                        </div>
-                    </div>
-                </div>
-                <div className='flex flex-col space-y-2 w-full'>
-                    <div className='w-full p-5 bg-softGray dark:bg-tradeBlue font-bold text-xl rounded-lg text-white'>Sellers</div>
-                    <div className='w-full h-[510px] flex flex-col bg-softGray dark:bg-tradeBlue font-bold text-lg rounded-lg text-white'>
-                        <div className='flex flex-row p-5 justify-between items-center'>
-                            <p>USDT</p>
-                            <p>4X</p>
-                        </div>
-                        <div className="overflow-y-auto">
-                            {infoPublic.sell.slice().reverse().map((e, index) => {
-                                return (
-                                    <div key={index} className="flex flex-row justify-between px-4 py-1 pb-4 mt-1 items-center">
-                                        <p className="text-tradeRed text-xs text-start w-full">{e.tetherRecive.toString().substring(0, 9)}</p>
-                                        <p className="text-white text-xs text-end w-full">{e.token.toString().substring(0, 9)}</p>
-                                    </div>
-                                )
-                            })}
-                        </div>
-                    </div>
-                </div>
-            </div> */}
             {
-                showMessage && <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
+                showMessage && <div className='fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
                     <Message />
                 </div>
             }
             {
-                showMessage1 && <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
+                showMessage1 && <div className='fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
                     <Message1 />
                 </div>
             }
             {
-                showMessage2 && <div className='absolute top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
+                showMessage2 && <div className='fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2'>
                     <Message2 />
                 </div>
             }

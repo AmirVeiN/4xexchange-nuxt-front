@@ -9,6 +9,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/navigation'
 import Image from "next/image";
 import { toast } from 'sonner';
+import loginimg from "../../public/login.png"
 
 export default function LoginForm() {
 
@@ -34,30 +35,36 @@ export default function LoginForm() {
     }
 
 
-    const HandleSubmit = (e) => {
+    const handleSubmit = () => {
 
-        e.preventDefault();
+        dispatch(login({ email: email, password: password })).then((b) => {
 
-        dispatch(login({ email: email, password: password })).then((e) => {
-            if (e.type.includes("fulfilled")) {
+            if (b.type.includes("fulfilled")) {
                 waitForToken().then(() => {
                     dispatch(getUser())
+                    router.push('/');
                 })
+
+            } else {
+                toast.error("error")
             }
-        });
+        })
 
     };
 
 
     return (
         <div className='relative'>
-            <div className="h-full md:h-screen w-full flex justify-center items-center bg-black mt-5 md:mt-0">
-                <div className="bg-background rounded-2xl w-[360px] justify-around items-center py-10 h-[700px] flex flex-col shadow-lg shadow-white">
-                    <Image src="/logo.png" alt="" width={150} height={150} priority={true} />
-                    <form onSubmit={HandleSubmit} className='flex flex-col justify-center space-y-6 h-full items-center w-[80%]'>
+            <div className="h-screen w-full flex justify-center items-center bg-mainBlue ">
+                <div className="hidden md:flex bg-[#CEBEA5] rounded-l-2xl w-[560px] justify-center items-center py-10 h-[500px] shadow-lg shadow-white">
+                    <Image src={loginimg} alt="" width={500} height={500} priority={true} />
+                </div>
+                <div className="bg-white rounded-r-2xl rounded-l-2xl md:rounded-r-2xl md:rounded-l-none w-full md:w-[360px] justify-center md:justify-around items-center py-10 h-full md:h-[500px] flex flex-col shadow-lg shadow-white">
+                    <Image src={loginimg} alt="" width={300} height={300} priority={true} className="flex md:hidden mb-4" />
+                    <form onSubmit={(e) => { e.preventDefault(); handleSubmit(); }} className='flex flex-col justify-center space-y-6 h-fit md:h-full items-center w-[80%]'>
                         <div className='flex flex-row space-x-2 w-full items-center'>
-                            <div className='border border-white rounded w-16 h-10 flex justify-center items-center' >
-                                <MdEmail color='white' size={20} />
+                            <div className='border border-mainBlue rounded w-16 h-10 flex justify-center items-center' >
+                                <MdEmail color='#21749c' size={20} />
                             </div>
                             <input
                                 required
@@ -65,12 +72,12 @@ export default function LoginForm() {
                                 placeholder="Email"
                                 value={email}
                                 onChange={handleEmailChange}
-                                className="w-full p-2 border focus:ring-4 focus:border-none focus:ring-yellow border-white text-white rounded bg-background"
+                                className="w-full p-2 border border-mainBlue focus:ring-4 focus:border-none  text-black rounded bg-white"
                             />
                         </div>
                         <div className='flex flex-row space-x-2 w-full items-center'>
-                            <div className='border border-white rounded w-16 h-10 flex justify-center items-center' >
-                                <RiLockPasswordFill color='white' size={20} />
+                            <div className='border border-mainBlue rounded w-16 h-10 flex justify-center items-center' >
+                                <RiLockPasswordFill color='#21749c' size={20} />
                             </div>
                             <input
                                 required
@@ -79,25 +86,25 @@ export default function LoginForm() {
                                 placeholder="Password"
                                 value={password}
                                 onChange={handlePasswordChange}
-                                className="w-full p-2 border border-white focus:ring-4 focus:border-none focus:ring-yellow text-white rounded bg-background"
+                                className="w-full p-2 border border-mainBlue focus:ring-4 focus:border-none text-black rounded bg-white"
                             />
                         </div>
                         <button
                             type="submit"
-                            className="w-72 font-bold bg-gridYellow text-background p-2 rounded"
+                            className="w-72 font-bold bg-mainBlue text-white p-2 rounded"
                         >
                             Login
                         </button>
                     </form>
-                    <div className='flex flex-col justify-center items-center mb-12'>
-                        <p className='text-white font-medium'>Forget Your Password?</p>
-                        <Link className='text-background rounded-md font-bold bg-tradeGreen py-1 px-4 mt-2' href="/password">Foget Passowrd</Link>
+                    <div className='flex flex-col justify-center items-center mt-5 md:mt-0 mb-5 md:mb-12'>
+                        <p className='text-background font-medium'>Forget Your Password?</p>
+                        <Link className='text-white rounded-md font-bold bg-greenButton py-1 px-4 mt-2' href="/password">Foget Passowrd</Link>
                     </div>
                     <div className='flex flex-col justify-center items-center '>
-                        <p className='text-white font-medium'>You dont have account?</p>
+                        <p className='text-background font-medium'>You dont have account?</p>
                         <div className="flex flex-row justify-center items-center space-x-5">
-                            <Link className='text-background rounded-md font-bold bg-white py-1 px-4 mt-2' href="/">Home</Link>
-                            <Link className='text-background rounded-md font-bold bg-tradeRed py-1 px-4 mt-2' href="/Sign-Up">Sign Up</Link>
+                            <Link className='text-white rounded-md font-bold bg-yellow py-1 px-4 mt-2' href="/">Home</Link>
+                            <Link className='text-white rounded-md font-bold bg-tradeRed py-1 px-4 mt-2' href="/Sign-Up">Sign Up</Link>
                         </div>
                     </div>
                 </div>
