@@ -13,7 +13,6 @@ import imgfour from "../public/step1.png"
 import imgfive from "../public/step2.png"
 import imgsix from "../public/step3.png"
 import quests from "../public/shiba9.png"
-import Link from "next/link";
 import { MiniChart, SymbolOverview, Screener, Timeline, CryptocurrencyMarket } from "react-tradingview-embed";
 import background from "../public/back.png"
 import landing from "../public/landing.jpg"
@@ -28,6 +27,7 @@ import mini1 from "../public/mini1.png"
 import mini2 from "../public/coin.png"
 import { ParallaxProvider } from 'react-scroll-parallax'
 import LoadingPage from "../components/loading";
+import Link from "next/link";
 
 function Home() {
 
@@ -108,22 +108,26 @@ function Home() {
         </div>
         <div className="flex flex-row w-full md:w-[45%]">
           <Image src={track} alt="" width={130} />
-          <div className="flex flex-col justify-between">
+          <div className="flex flex-col justify-between space-y-5">
             <div className="flex flex-col items-start space-y-3">
-              <p className="text-mainBlue dark:text-white font-bold 3xl:text-2xl 2xl:text-2xl xl:text-xl lg:text-xl md:text-xl sm:text-2xl ph:text-2xl">Safety</p>
-              <p className="text-gray text-xl md:text-lg">we provide the best and safest place to hold your money and easily liquidate it whenever you want</p>
+              <p className="text-mainBlue dark:text-white font-bold 3xl:text-2xl 2xl:text-2xl xl:text-xl lg:text-xl md:text-xl sm:text-2xl ph:text-2xl">Security</p>
+              <p className="text-gray text-xl md:text-lg">Our platform uses advanced encryption and security measures to ensure that your funds and personal information are always safe. With multi-factor authentication and cold storage, we provide the highest level of protection for your assets.
+              </p>
             </div>
             <div className="flex flex-col items-start space-y-3">
-              <p className="text-mainBlue dark:text-white font-bold 3xl:text-2xl 2xl:text-2xl xl:text-xl lg:text-xl md:text-xl sm:text-2xl ph:text-2xl">Safety</p>
-              <p className="text-gray text-xl md:text-lg">we provide the best and safest place to hold your money and easily liquidate it whenever you want</p>
+              <p className="text-mainBlue dark:text-white font-bold 3xl:text-2xl 2xl:text-2xl xl:text-xl lg:text-xl md:text-xl sm:text-2xl ph:text-2xl">User-Friendly Interface</p>
+              <p className="text-gray text-xl md:text-lg">4xExChange offers a seamless and intuitive user interface, making it easy for both beginners and experienced traders to navigate and execute trades efficiently. Our platform is designed to provide a smooth trading experience.
+              </p>
             </div>
             <div className="flex flex-col items-start space-y-3">
-              <p className="text-mainBlue dark:text-white font-bold 3xl:text-2xl 2xl:text-2xl xl:text-xl lg:text-xl md:text-xl sm:text-2xl ph:text-2xl">Safety</p>
-              <p className="text-gray text-xl md:text-lg">we provide the best and safest place to hold your money and easily liquidate it whenever you want</p>
+              <p className="text-mainBlue dark:text-white font-bold 3xl:text-2xl 2xl:text-2xl xl:text-xl lg:text-xl md:text-xl sm:text-2xl ph:text-2xl">Wide Range of Services</p>
+              <p className="text-gray text-xl md:text-lg">We offer a comprehensive suite of financial services, including trading, lending, staking, and more. Whether you are looking to trade cryptocurrencies or earn interest on your holdings, 4xExChange has you covered.
+              </p>
             </div>
             <div className="flex flex-col items-start space-y-3">
-              <p className="text-mainBlue dark:text-white font-bold 3xl:text-2xl 2xl:text-2xl xl:text-xl lg:text-xl md:text-xl sm:text-2xl ph:text-2xl">Safety</p>
-              <p className="text-gray text-xl md:text-lg">we provide the best and safest place to hold your money and easily liquidate it whenever you want</p>
+              <p className="text-mainBlue dark:text-white font-bold 3xl:text-2xl 2xl:text-2xl xl:text-xl lg:text-xl md:text-xl sm:text-2xl ph:text-2xl">24/7 Customer Support</p>
+              <p className="text-gray text-xl md:text-lg">Our dedicated customer support team is available 24/7 to assist you with any queries or issues you may encounter. We are committed to providing timely and effective support to ensure your satisfaction and peace of mind.
+              </p>
             </div>
           </div>
         </div>
@@ -152,26 +156,23 @@ function Home() {
       <div className="flex flex-col lg:flex-row lg:space-y-0 space-y-5 justify-center items-center lg:items-stretch lg:justify-between max-w-[1600px] w-full p-12">
         <div className="rounded-3xl bg-shiba1 w-[330px] sm:w-[390px] h-[620px] bg-cover bg-center">
           <div className="flex flex-col space-y-4 justify-end items-center p-5 bg-gradient-to-b rounded-3xl from-transparent to-black h-full">
-            <p className="font-bold text-3xl text-white">Trading with 4x</p>
-            <p className="font-bold text-center text-lg w-64 text-white">Expand your creativity and
-              turn your artwork into NFTs.</p>
-            <button className="px-8 py-3 w-fit rounded-2xl bg-mainBlue font-black text-white text-2xl">Trade Now</button>
+            <p className="font-bold text-3xl text-white">Explore New Horizons</p>
+            <p className="font-bold text-center text-lg w-64 text-white">Expand your creativity with 4X Platform</p>
+            <Link href="/trading" className="px-8 py-3 w-fit rounded-2xl bg-mainBlue font-black text-white text-2xl">Trade Now</Link>
           </div>
         </div>
         <div className="rounded-3xl bg-shiba2 w-[330px] sm:w-[390px] h-[620px] bg-cover bg-center">
           <div className="flex flex-col space-y-4 justify-end items-center p-5 bg-gradient-to-b rounded-3xl from-transparent to-black h-full">
-            <p className="font-bold text-3xl text-white">Trading with 4x</p>
-            <p className="font-bold text-center text-lg w-64 text-white">Expand your creativity and
-              turn your artwork into NFTs.</p>
-            <button className="px-8 py-3 w-fit rounded-2xl bg-mainBlue font-black text-white text-2xl">Trade Now</button>
+            <p className="font-bold text-3xl text-white">Profitable Trading</p>
+            <p className="font-bold text-center text-lg w-64 text-white">Trade securely and maximize profits</p>
+            <Link href="/trading" className="px-8 py-3 w-fit rounded-2xl bg-mainBlue font-black text-white text-2xl">Trade Now</Link>
           </div>
         </div>
         <div className="rounded-3xl bg-shiba3 w-[330px] sm:w-[390px] h-[620px] bg-cover bg-center">
           <div className="flex flex-col space-y-4 justify-end items-center p-5 bg-gradient-to-b rounded-3xl from-transparent to-black h-full">
-            <p className="font-bold text-3xl text-white">Trading with 4x</p>
-            <p className="font-bold text-center text-lg w-64 text-white">Expand your creativity and
-              turn your artwork into NFTs.</p>
-            <button className="px-8 py-3 w-fit rounded-2xl bg-mainBlue font-black text-white text-2xl">Trade Now</button>
+            <p className="font-bold text-3xl text-white">Innovative Platform</p>
+            <p className="font-bold text-center text-lg w-64 text-white">Experience intuitive and powerful trading</p>
+            <Link href="/trading" className="px-8 py-3 w-fit rounded-2xl bg-mainBlue font-black text-white text-2xl">Trade Now</Link>
           </div>
         </div>
       </div>
@@ -183,9 +184,9 @@ function Home() {
         <div className="flex flex-col lg:flex-row lg:space-y-0 space-y-5 justify-between items-center">
           <div className="hidden md:flex flex-row rounded-3xl lg:w-[990px] w-[90%] h-[470px] ">
             <div className="flex w-[50%] flex-col justify-evenly items-start p-8 rounded-l-3xl bg-gradient-to-l from-black to-black h-full">
-              <p className="font-bold text-3xl text-white">Trading with 4x</p>
-              <p className="font-bold text-left text-lg text-gray">The Baby Doge Army is one of the most active communities in crypto. Our global community of doge lovers support our mission of crypto and animal adoption. Over 2.5 million followers across all social networks. Baby Doge spreads a positive message.</p>
-              <button className="px-8 py-3 w-fit rounded-2xl bg-mainBlue font-black text-white text-2xl">Trade Now</button>
+              <p className="font-bold text-3xl text-white">Advanced Trading Tools</p>
+              <p className="font-bold text-left text-lg text-gray">Utilize cutting-edge tools and analytics to enhance your trading strategies. With 4xExChange, you have access to real-time data, customizable charts, and comprehensive market analysis to make informed decisions. Elevate your trading experience with our state-of-the-art platform.</p>
+              <Link href="/trading" className="px-8 py-3 w-fit rounded-2xl bg-mainBlue font-black text-white text-2xl">Trade Now</Link>
             </div>
             <div className="bg-shiba4 bg-center bg-cover w-[50%] h-full rounded-r-3xl">
               <div className="bg-gradient-to-l from-transparent to-black h-full">
@@ -198,43 +199,39 @@ function Home() {
               </div>
             </div>
             <div className="flex w-full flex-col justify-evenly items-start p-8 rounded-b-3xl bg-gradient-to-l from-black to-black h-full">
-              <p className="font-bold text-3xl text-white">Trading with 4x</p>
-              <p className="font-bold text-left text-lg text-gray">The Baby Doge Army is one of the most active communities in crypto. Our global community of doge lovers support our mission of crypto and animal adoption. Over 2.5 million followers across all social networks. Baby Doge spreads a positive message.</p>
-              <button className="px-8 py-3 w-fit rounded-2xl bg-mainBlue font-black text-white text-2xl">Trade Now</button>
+              <p className="font-bold text-3xl text-white">Advanced Trading Tools</p>
+              <p className="font-bold text-left text-lg text-gray">Utilize cutting-edge tools and analytics to enhance your trading strategies. With 4xExChange, you have access to real-time data, customizable charts, and comprehensive market analysis to make informed decisions. Elevate your trading experience with our state-of-the-art platform.</p>
+              <Link href="/trading" className="px-8 py-3 w-fit rounded-2xl bg-mainBlue font-black text-white text-2xl">Trade Now</Link>
             </div>
           </div>
           <div className="rounded-3xl bg-shiba8 w-[330px] sm:w-[390px] h-[470px] bg-cover bg-center">
             <div className="flex flex-col space-y-4 justify-end items-center p-5 bg-gradient-to-b rounded-3xl from-transparent to-black h-full">
-              <p className="font-bold text-3xl text-white">Trading with 4x</p>
-              <p className="font-bold text-center text-lg w-64 text-white">Expand your creativity and
-                turn your artwork into NFTs.</p>
-              <button className="px-8 py-3 w-fit rounded-2xl bg-mainBlue font-black text-white text-2xl">Trade Now</button>
+              <p className="font-bold text-3xl text-white">Low Fees</p>
+              <p className="font-bold text-center text-lg w-64 text-white">trading with minimal fees.</p>
+              <Link href="/trading" className="px-8 py-3 w-fit rounded-2xl bg-mainBlue font-black text-white text-2xl">Trade Now</Link>
             </div>
           </div>
         </div>
         <div className="flex flex-col lg:flex-row lg:space-y-0 space-y-5 justify-between">
           <div className="rounded-3xl bg-shiba5 w-[330px] sm:w-[390px] h-[620px] bg-cover bg-center">
             <div className="flex flex-col space-y-4 justify-end items-center p-5 bg-gradient-to-b rounded-3xl from-transparent to-black h-full">
-              <p className="font-bold text-3xl text-white">Trading with 4x</p>
-              <p className="font-bold text-center text-lg w-64 text-white">Expand your creativity and
-                turn your artwork into NFTs.</p>
-              <button className="px-8 py-3 w-fit rounded-2xl bg-mainBlue font-black text-white text-2xl">Trade Now</button>
+              <p className="font-bold text-3xl text-white">Fast Transactions</p>
+              <p className="font-bold text-center text-lg w-64 text-white">Experience fast trades.</p>
+              <Link href="/trading" className="px-8 py-3 w-fit rounded-2xl bg-mainBlue font-black text-white text-2xl">Trade Now</Link>
             </div>
           </div>
           <div className="rounded-3xl bg-shiba6 w-[330px] sm:w-[390px] h-[620px] bg-cover bg-center">
             <div className="flex flex-col space-y-4 justify-end items-center p-5 bg-gradient-to-b rounded-3xl from-transparent to-black h-full">
-              <p className="font-bold text-3xl text-white">Trading with 4x</p>
-              <p className="font-bold text-center text-lg w-64 text-white">Expand your creativity and
-                turn your artwork into NFTs.</p>
-              <button className="px-8 py-3 w-fit rounded-2xl bg-mainBlue font-black text-white text-2xl">Trade Now</button>
+              <p className="font-bold text-3xl text-white">24/7 Support</p>
+              <p className="font-bold text-center text-lg w-64 text-white">We're here for you anytime.</p>
+              <Link href="/trading" className="px-8 py-3 w-fit rounded-2xl bg-mainBlue font-black text-white text-2xl">Trade Now</Link>
             </div>
           </div>
           <div className="rounded-3xl bg-shiba7 w-[330px] sm:w-[390px] h-[620px] bg-cover bg-center">
             <div className="flex flex-col space-y-4 justify-end items-center p-5 bg-gradient-to-b rounded-3xl from-transparent to-black h-full">
-              <p className="font-bold text-3xl text-white">Trading with 4x</p>
-              <p className="font-bold text-center text-lg w-64 text-white">Expand your creativity and
-                turn your artwork into NFTs.</p>
-              <button className="px-8 py-3 w-fit rounded-2xl bg-mainBlue font-black text-white text-2xl">Trade Now</button>
+              <p className="font-bold text-3xl text-white">Diverse Assets</p>
+              <p className="font-bold text-center text-lg w-64 text-white">Trade a wide range of assets.</p>
+              <Link href="/trading" className="px-8 py-3 w-fit rounded-2xl bg-mainBlue font-black text-white text-2xl">Trade Now</Link>
             </div>
           </div>
         </div>
