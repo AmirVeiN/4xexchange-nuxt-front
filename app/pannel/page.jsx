@@ -95,7 +95,7 @@ export default function Pannel() {
 
     useEffect(() => {
 
-        socket.current = new WebSocket('ws://localhost:8000/ws/some_path/');
+        socket.current = new WebSocket('ws://localhost:8000/ws/chart/');
 
         socket.current.onopen = () => {
             console.log('WebSocket is open now.');
@@ -136,7 +136,7 @@ export default function Pannel() {
         if (!WithdrawHistory) {
             dispatch(clientWithdrawsList());
         }
-    }, []);
+    }, [dispatch, WithdrawHistory, depositHistory, tickets, data]);
 
     useEffect(() => {
 
@@ -155,7 +155,7 @@ export default function Pannel() {
             return () => clearInterval(intervalId);
         }
 
-    }, []);
+    }, [change, activeButton]);
 
 
     if (!data || !tickets || !depositHistory || !WithdrawHistory || !lastPrice) {

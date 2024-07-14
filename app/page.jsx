@@ -223,7 +223,7 @@ function Home() {
           <div className="rounded-3xl bg-shiba6 w-[330px] sm:w-[390px] h-[620px] bg-cover bg-center">
             <div className="flex flex-col space-y-4 justify-end items-center p-5 bg-gradient-to-b rounded-3xl from-transparent to-black h-full">
               <p className="font-bold text-3xl text-white">24/7 Support</p>
-              <p className="font-bold text-center text-lg w-64 text-white">We're here for you anytime.</p>
+              <p className="font-bold text-center text-lg w-64 text-white">We`re here for you anytime.</p>
               <Link href="/trading" className="px-8 py-3 w-fit rounded-2xl bg-mainBlue font-black text-white text-2xl">Trade Now</Link>
             </div>
           </div>
@@ -297,17 +297,6 @@ function Home() {
 }
 
 export default function MyApp({ Component, pageProps }) {
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    setTimeout(() => {
-      setLoading(false);
-    }, 2000);
-  }, []);
-
-  if (loading) {
-    return <LoadingPage />;
-  }
 
   return (
     <ParallaxProvider>

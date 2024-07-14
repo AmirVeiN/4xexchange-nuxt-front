@@ -19,27 +19,27 @@ const lilia = Chivo({
 
 export const metadata = {
   title: "4xExChange",
-  description: "4xExChange Finance offers a comprehensive suite of financial services.",
-  url: "https://4xexchange.com",
-  image: "https://4xexchange.com/logogoogle.png",
-  keywords: ["4xexchange", "4xExChange", "finance", "trading", "lending", "staking", "exchange", "4x", "4x exchange", "4x token", "4xtoken", "token"],
-  author: "4xExchange Team",
-  language: "en",
-  og: {
-    title: "4xExChange | Finance",
-    description: "4xExChange Finance offers a comprehensive suite of financial services.",
-    image: "https://4xexchange.com/logogoogle.png",
-    url: "https://4xexchange.com",
-    type: "website",
-    site_name: "4xExChange",
-  },
-  twitter: {
-    card: "summary_large_image",
-    site: "@4xexchange",
-    title: "4xExChange | Finance",
-    description: "4xExChange Finance offers a comprehensive suite of financial services.",
-    image: "https://4xexchange.com/logogoogle.png",
-  },
+  // description: "4xExChange Finance offers a comprehensive suite of financial services.",
+  // url: "https://4xexchange.com",
+  // image: "https://4xexchange.com/logogoogle.png",
+  // keywords: ["4xexchange", "4xExChange", "finance", "trading", "lending", "staking", "exchange", "4x", "4x exchange", "4x token", "4xtoken", "token"],
+  // author: "4xExchange Team",
+  // language: "en",
+  // og: {
+  //   title: "4xExChange | Finance",
+  //   description: "4xExChange Finance offers a comprehensive suite of financial services.",
+  //   image: "https://4xexchange.com/logogoogle.png",
+  //   url: "https://4xexchange.com",
+  //   type: "website",
+  //   site_name: "4xExChange",
+  // },
+  // twitter: {
+  //   card: "summary_large_image",
+  //   site: "@4xexchange",
+  //   title: "4xExChange | Finance",
+  //   description: "4xExChange Finance offers a comprehensive suite of financial services.",
+  //   image: "https://4xexchange.com/logogoogle.png",
+  // },
 };
 
 
@@ -49,7 +49,7 @@ export default function RootLayout({ children }) {
     <html lang="en">
       <Head>
         <title>{metadata.title}</title>
-        <meta name="description" content={metadata.description} />
+        {/* <meta name="description" content={metadata.description} />
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta name="theme-color" content="#1A1A1A" />
         <meta name="author" content={metadata.author} />
@@ -68,7 +68,7 @@ export default function RootLayout({ children }) {
         <meta name="twitter:image" content={metadata.twitter.image} />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link rel="canonical" href={metadata.url} />
+        <link rel="canonical" href={metadata.url} /> */}
       </Head>
       <body className={lilia.className}>
         <Toaster richColors />

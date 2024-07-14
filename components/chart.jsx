@@ -16,9 +16,8 @@ const WebSocketComponent = ({ onLastClosePriceUpdate, onVolume24hUpdate }) => {
     const hasRequestedMoreDataRef = useRef(false);
 
     useEffect(() => {
-        console.log("Initializing WebSocket connection...");
 
-        socket.current = new WebSocket('ws://localhost:8000/ws/some_path/');
+        socket.current = new WebSocket('ws://localhost:8000/ws/chart/');
 
         socket.current.onopen = () => {
             console.log('WebSocket is open now.');
@@ -32,15 +31,11 @@ const WebSocketComponent = ({ onLastClosePriceUpdate, onVolume24hUpdate }) => {
 
         socket.current.onmessage = (event) => {
             const data = JSON.parse(event.data);
-            console.log(data.volume_24h);
-            console.log('Received data from server:', data);
             if (data.volume_24h !== undefined) {
-                console.log('Received volume data:', data.volume_24h);
                 onVolume24hUpdate(data.volume_24h);
                 return;
             }
             if (data.error) {
-                console.error(data.error);
                 return;
             }
 
@@ -76,7 +71,7 @@ const WebSocketComponent = ({ onLastClosePriceUpdate, onVolume24hUpdate }) => {
                 socket.current.close();
             }
         };
-    }, [timeFrame]);
+    }, [timeFrame, onVolume24hUpdate, onLastClosePriceUpdate]);
 
     const sendMessage = (keyword, page) => {
         if (socket.current) {
@@ -189,7 +184,7 @@ const WebSocketComponent = ({ onLastClosePriceUpdate, onVolume24hUpdate }) => {
             window.removeEventListener('resize', handleResize);
             chart.remove();
         };
-    }, [response]);
+    }, [response, receivingData, timeFrame]);
 
     return (
         <div className='flex flex-col w-full h-fit justify-center space-y-3 items-center'>

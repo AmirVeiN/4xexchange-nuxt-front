@@ -94,9 +94,10 @@ export const getUser = createAsyncThunk('users/me', async () => {
     const headers = {
         'Authorization': 'JWT ' + localStorage.getItem('access'),
         'Content-Type': 'application/json',
+        accept: 'application/json',
     }
 
-    const res = await axios.get('https://server.4xexchange.com/api/v1/users/me/', { headers });
+    const res = await axios.get('https://server.4xexchange.com/api/v1/users/me/', { headers: headers });
 
     return res.data;
 });
@@ -364,7 +365,6 @@ const userSlice = createSlice({
                 state.isAuthenticated = true;
                 state.user = action.payload;
                 localStorage.setItem('auth', action.payload.user_type);
-
             })
             .addCase(getUser.rejected, state => {
                 state.isAuthenticated = false;
