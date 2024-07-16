@@ -73,6 +73,16 @@ module.exports = {
       gridYellow: "#FFC75B",
     },
     extend: {
+      keyframes: {
+        'shake-vertical': {
+          '0%, 100%': { transform: 'translateY(0)' },
+          '25%': { transform: 'translateY(-10px)' },
+          '75%': { transform: 'translateY(10px)' },
+        },
+      },
+      animation: {
+        'shake-vertical': 'shake-vertical 3s cubic-bezier(1, 1, 0, 0) infinite',
+      },
       boxShadow: {
         "lg-light": "0px 5px 16px -3px rgb(0, 0, 0, 0.1);",
         "lg-light2": "0px 0px 16px -3px rgb(0, 0, 0, 0.1);",

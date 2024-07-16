@@ -35,27 +35,16 @@ export default function LoginForm() {
         });
     }
 
-    const getUserFunc = async () => {
-        console.log("start");
-
-        const headers = {
-            'Authorization': 'JWT eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0b2tlbl90eXBlIjoiYWNjZXNzIiwiZXhwIjoxNzIxMDU4NzUxLCJpYXQiOjE3MjA5NzA4NjYsImp0aSI6ImRhNTc0M2Q1ZWMzZjRlOGNiMmZmZDJkZWMwM2JkYTQ2IiwidXNlcl9pZCI6NTN9.hffZpA2FBfU7GJ2Ww9q7aAif5ZiM_7aFrZLS_0E11ow',
-            'Content-Type': 'application/json',
-            'Accept': 'application/json',
-        };
-
-        const res = await axios.get('https://server.4xexchange.com/api/v1/users/me/', { headers: headers });
-        return res.data;
-
-    };
-
     const handleSubmit = () => {
 
         dispatch(login({ email: email, password: password })).then((b) => {
 
             if (b.type.includes("fulfilled")) {
                 waitForToken().then(() => {
-                    dispatch(getUser())
+
+                    dispatch(getUser(localStorage.getItem('access')))
+                    router.push('/')
+                    router.refresh()
                 })
 
             } else {
@@ -116,7 +105,7 @@ export default function LoginForm() {
                     <div className='flex flex-col justify-center items-center '>
                         <p className='text-background font-medium'>You dont have account?</p>
                         <div className="flex flex-row justify-center items-center space-x-5">
-                            <button onClick={() => getUserFunc()} className='text-white rounded-md font-bold bg-yellow py-1 px-4 mt-2' href="/">gg</button>
+                            <button onClick={() => dispatch(getUser(localStorage.getItem('access')))} className='text-white rounded-md font-bold bg-yellow py-1 px-4 mt-2' href="/">gg</button>
                             <Link className='text-white rounded-md font-bold bg-yellow py-1 px-4 mt-2' href="/">Home</Link>
                             <Link className='text-white rounded-md font-bold bg-tradeRed py-1 px-4 mt-2' href="/Sign-Up">Sign Up</Link>
                         </div>

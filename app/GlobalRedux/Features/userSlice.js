@@ -89,17 +89,16 @@ export const signUp = createAsyncThunk("user/signUp", async ({ code, email, user
 
 });
 
-export const getUser = createAsyncThunk('users/me', async () => {
+export const getUser = createAsyncThunk('users/me', async (acessCode) => {
 
     const headers = {
-        'Authorization': 'JWT ' + localStorage.getItem('access'),
+        Authorization: acessCode,
         'Content-Type': 'application/json',
         accept: 'application/json',
     }
 
-    const res = await axios.get('https://server.4xexchange.com/api/v1/users/me/', { headers: headers });
-
-    return res.data;
+    const response = await axios.get('/api/getUser', { headers });
+    return response.data;
 });
 
 export const login = createAsyncThunk("user/login", async ({ email, password }) => {
@@ -125,12 +124,12 @@ export const createTicket = createAsyncThunk("user/createTicket", async ({ title
     return response.data;
 });
 
-export const allTickets = createAsyncThunk("user/allTickets", async () => {
+export const allTickets = createAsyncThunk("user/allTickets", async (code) => {
     const headers = {
-        'Authorization': 'JWT ' + localStorage.getItem('access'),
+        'Authorization': code,
         'Content-Type': 'application/json',
     }
-    const response = await axios.get(`https://server.4xexchange.com/api/v1/tickets/all/`, { headers });
+    const response = await axios.get('/api/allTickets', { headers });
     return response.data;
 });
 
@@ -324,9 +323,14 @@ export const DisableDeposit = createAsyncThunk("user/DisableDeposit", async ({ p
     return response.data;
 });
 
+export const GetPriceChange = createAsyncThunk("user/GetPriceChange", async () => {
+    const response = await axiosInstance.get(`chart/price-change/`);
+    return response.data;
+});
+
 const userSlice = createSlice({
     name: "user",
-    initialState: { depostiRequest: null, price: null, SellAndBuyAdmin: null, SellAndBuyPublic: null, SellAndBuyClient: null, clientWithdrawsList: null, withdrawsList: null, allDepoits: null, userDetail: null, temporaryChartData: null, paymentsClient: null, chartData: null, transaction: false, isAuthenticated: false, loading: false, error: "", depositCreate: null, user: null, tickets: null, members: null },
+    initialState: { priceChange: null, depostiRequest: null, price: null, SellAndBuyAdmin: null, SellAndBuyPublic: null, SellAndBuyClient: null, clientWithdrawsList: null, withdrawsList: null, allDepoits: null, userDetail: null, temporaryChartData: null, paymentsClient: null, chartData: null, transaction: false, isAuthenticated: false, loading: false, error: "", depositCreate: null, user: null, tickets: null, members: null },
     reducers: {
         activateAuth(state) {
             state.isAuthenticated = true
@@ -375,6 +379,7 @@ const userSlice = createSlice({
                 state.user = null
                 localStorage.removeItem('access');
                 localStorage.removeItem('refresh');
+                localStorage.removeItem('auth');
             })
             .addCase(resetPassword.pending, (state) => {
                 state.loading = true;
@@ -751,6 +756,17 @@ const userSlice = createSlice({
                 state.loading = false;
             })
             .addCase(DisableDeposit.rejected, (state, action) => {
+                state.loading = false;
+                state.error = action.error.message;
+            })
+            .addCase(GetPriceChange.pending, (state) => {
+                state.loading = true;
+            })
+            .addCase(GetPriceChange.fulfilled, (state, action) => {
+                state.loading = false;
+                state.priceChange = action.payload
+            })
+            .addCase(GetPriceChange.rejected, (state, action) => {
                 state.loading = false;
                 state.error = action.error.message;
             })

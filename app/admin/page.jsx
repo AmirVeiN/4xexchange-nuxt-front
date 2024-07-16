@@ -11,7 +11,7 @@ import { MdAdminPanelSettings } from "react-icons/md";
 import { GiShieldDisabled } from "react-icons/gi";
 import { FaUserFriends } from "react-icons/fa";
 import React, { useEffect, useState } from "react";
-import { GetSellAndBuyAdmin, AddPriceData, DisableDeposit, AcceptDeposit, ChangeVolume, DepositRequests, allDepositUsers, changeCurrnecy, changeWithdrawAnswer, AdminUserList, changeStatusUser, AdminWithdraws, logout, UserFullDetails, AdminTicketList, AdminTicketAnswer, AdminTicketComplete, AdminUserSearch, ChartData, temporaryChartData, getUser } from "../GlobalRedux/Features/userSlice";
+import { GetSellAndBuyAdmin, AddPriceData, DisableDeposit, AcceptDeposit, ChangeVolume, DepositRequests, allDepositUsers, changeCurrnecy, changeWithdrawAnswer, AdminUserList, changeStatusUser, AdminWithdraws, logout, UserFullDetails, AdminTicketList, AdminTicketAnswer, AdminTicketComplete, AdminUserSearch, ChartData, temporaryChartData } from "../GlobalRedux/Features/userSlice";
 import LoadingPage from '../../components/loading';
 import Popup from "../../components/modal"
 import { FaBoxArchive } from "react-icons/fa6";
@@ -128,35 +128,59 @@ export default function Admin() {
         }
     }, [activeButton, dispatch]);
 
+
     useEffect(() => {
 
         if (!temporaryChartNumbers) {
             dispatch(temporaryChartData());
             return;
         }
+
+    }, [temporaryChartNumbers, dispatch]);
+
+    useEffect(() => {
+
         if (!chartNumbers) {
             dispatch(ChartData());
             return;
         }
+
+    }, [chartNumbers, dispatch]);
+
+    useEffect(() => {
+
         if (!allDepoits) {
             dispatch(allDepositUsers());
             return;
         }
+
+    }, [allDepoits, dispatch]);
+
+    useEffect(() => {
+
         if (!SellAndBuy) {
             dispatch(GetSellAndBuyAdmin());
             return;
         }
+
+    }, [SellAndBuy, dispatch]);
+
+    useEffect(() => {
+
         if (!requestDeposit) {
             dispatch(DepositRequests());
             return;
         }
+
+    }, [requestDeposit, dispatch]);
+
+    useEffect(() => {
+
         if (!members) {
             dispatch(AdminUserList());
         }
 
-    }, [temporaryChartNumbers, chartNumbers, allDepoits, SellAndBuy, requestDeposit, members, dispatch]);
-
-
+    }, [members, dispatch]);
 
     if (!members) {
         return <LoadingPage />;

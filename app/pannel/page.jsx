@@ -95,7 +95,7 @@ export default function Pannel() {
 
     useEffect(() => {
 
-        socket.current = new WebSocket('ws://localhost:8000/ws/chart/');
+        socket.current = new WebSocket('wss://server.4xexchange.com/ws/chart/');
 
         socket.current.onopen = () => {
             console.log('WebSocket is open now.');
@@ -125,10 +125,10 @@ export default function Pannel() {
 
     useEffect(() => {
         if (!data) {
-            dispatch(getUser());
+            dispatch(getUser(localStorage.getItem('access')));
         }
         if (!tickets) {
-            dispatch(allTickets());
+            dispatch(allTickets(localStorage.getItem('access')));
         }
         if (!depositHistory) {
             dispatch(DepositHistoryClient());
@@ -575,8 +575,8 @@ export default function Pannel() {
 
                     {activeButton === "Profile" && <div className="flex md:hidden m-2 bg-white dark:bg-background rounded-3xl shadow-lg flex-col space-y-5 p-5">
                         <div className="flex flex-row justify-between items-center">
-                            <div className="flex flex-row justify-center items-center space-x-3">
-                                <SiTether color="#28C76F" size={40} />
+                            <div className="flex flex-row justify-center items-center space-x-3 pl-2">
+                                <SiTether color="green" size={40} />
                                 <div className="flex flex-col ">
                                     <p className="text-black font-bold dark:text-white">Tether</p>
                                     <p className="text-gray">$1</p>
@@ -589,7 +589,7 @@ export default function Pannel() {
                         </div>
                         <div className="flex flex-row justify-between items-center">
                             <div className="flex flex-row justify-center items-center space-x-3">
-                                <Image src={coin} alt="" width={40} height={40} />
+                                <Image src={coin} alt="" width={55} height={55} />
                                 <div className="flex flex-col ">
                                     <p className="text-black font-bold dark:text-white">4x</p>
                                     <p className="text-gray">${(lastPrice).toString().substring(0, 10)}</p>

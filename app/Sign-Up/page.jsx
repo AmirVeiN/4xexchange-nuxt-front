@@ -178,13 +178,13 @@ export default function RegistrationForm() {
                                         className="w-full p-2 border focus:ring-4 focus:border-none border-mainBlue text-black rounded bg-white"
                                     />
                                 </div>
-                                {/* <ReCAPTCHA
+                                <ReCAPTCHA
                                     theme="dark"
                                     sitekey="6Ldz7M8pAAAAAGEUMmxwvMdm7f5WMzECjUWs3TG3"
                                     onChange={() => setIsCaptchaSuccess(true)}
-                                /> */}
+                                />
                                 <button
-                                    // disabled={!isCaptchaSuccessful}
+                                    disabled={!isCaptchaSuccessful}
                                     type="submit"
                                     className="w-72 font-bold bg-mainBlue text-white p-2 rounded"
                                 >

@@ -2,10 +2,6 @@
 
 import Image from "next/image";
 import React, { useEffect, useState } from 'react';
-import secondImg from "../public/2.png"
-import mainImg from "../public/mainimage.png"
-import light2 from "../public/Rectangle 8.png"
-import light3 from "../public/Rectangle 9.png"
 import imgone from "../public/step4.png"
 import imgtwo from "../public/3.png"
 import imgthree from "../public/4.png"
@@ -48,48 +44,55 @@ function Home() {
         <div className="absolute bottom-0 w-full bg-gradient-to-b from-transparent to-back h-1/3">
         </div>
       </div>
+      <div className="flex md:hidden flex-col w-[95%]">
+        <div className="flex flex-col w-full justify-start items-start space-y-2">
+          <p className="font-bold text-black/80 3xl:text-5xl 2xl:text-5xl xl:text-4xl lg:text-3xl md:text-4xl sm:text-4xl ph:text-3xl">Services</p>
+          <p className="text-yellow font-bold 3xl:text-5xl 2xl:text-5xl xl:text-4xl lg:text-3xl md:text-4xl sm:text-4xl ph:text-2xl">Innovate with 4xExChange</p>
+        </div>
+        <Image src={racket} alt="" width={550} className="animate-shake animate-infinite animate-duration-[5s] animate-ease-[cubic-bezier(1,1,0,0)]" />
+      </div>
       <div className="flex flex-col max-w-[1600px] w-full justify-start items-start space-y-2 pl-4 sm:pl-12">
         <p className="font-bold text-black/80 3xl:text-5xl 2xl:text-5xl xl:text-4xl lg:text-3xl md:text-4xl sm:text-4xl ph:text-3xl">Services</p>
         <p className="text-yellow font-bold 3xl:text-5xl 2xl:text-5xl xl:text-4xl lg:text-3xl md:text-4xl sm:text-4xl ph:text-2xl">Innovate with 4xExChange</p>
       </div>
       <div className="relative w-full flex justify-center items-center">
-        <div className="gap-2 w-full max-w-[1600px] grid 3xl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 place-items-center place-content-center lg:p-0 p-5">
-          <div className="flex flex-col sm:flex-row h-full sm:h-64 p-4 w-full lg:w-[420px] bg-transparent rounded-3xl shadow-2xl space-x-5 justify-center items-center z-20">
+        <div className="gap-2 gap-y-5 w-full max-w-[1600px] grid 3xl:grid-cols-3 xl:grid-cols-3 lg:grid-cols-2 md:grid-cols-1 place-items-center place-content-center lg:p-0 p-5">
+          <div className="flex flex-col sm:flex-row h-full sm:h-64 p-4 w-full lg:w-[420px] bg-transparent rounded-3xl shadow-xl space-x-5 justify-center items-center z-20">
             <Image src={imgone} alt="" width={180} />
             <div className="flex flex-col items-start space-y-3">
               <p className="text-mainBlue text-center sm:text-left w-full dark:text-white font-bold 3xl:text-2xl 2xl:text-2xl xl:text-xl lg:text-xl md:text-xl sm:text-2xl ph:text-2xl">AI assistance</p>
               <p className="text-gray text-xl md:text-lg text-center sm:text-left">with development in ai projects in the world like chatgpt why not use ai in our trading platforms ?</p>
             </div>
           </div>
-          <div className="flex flex-col sm:flex-row h-full sm:h-64 p-4 w-full lg:w-[420px] bg-transparent rounded-3xl shadow-2xl space-x-5 justify-center items-center z-20">
+          <div className="flex flex-col sm:flex-row h-full sm:h-64 p-4 w-full lg:w-[420px] bg-transparent rounded-3xl shadow-xl space-x-5 justify-center items-center z-20">
             <Image src={imgtwo} alt="" width={150} />
             <div className="flex flex-col items-start space-y-3">
               <p className="text-mainBlue text-center sm:text-left w-full dark:text-white font-bold 3xl:text-2xl 2xl:text-2xl xl:text-xl lg:text-xl md:text-xl sm:text-2xl ph:text-2xl">Connected to defi</p>
               <p className="text-gray text-xl md:text-lg text-center sm:text-left">with the development of decentralized finance in the world, we are using the defi to provide the best financial services</p>
             </div>
           </div>
-          <div className="flex flex-col sm:flex-row h-full sm:h-64 p-4 w-full lg:w-[420px] bg-transparent rounded-3xl shadow-2xl space-x-5 justify-center items-center z-20">
+          <div className="flex flex-col sm:flex-row h-full sm:h-64 p-4 w-full lg:w-[420px] bg-transparent rounded-3xl shadow-xl space-x-5 justify-center items-center z-20">
             <Image src={imgthree} alt="" width={150} />
             <div className="flex flex-col items-start space-y-3">
               <p className="text-mainBlue text-center sm:text-left w-full dark:text-white font-bold 3xl:text-2xl 2xl:text-2xl xl:text-xl lg:text-xl md:text-xl sm:text-2xl ph:text-2xl">Easy to start</p>
               <p className="text-gray text-xl md:text-lg text-center sm:text-left">if you want to start trading instead of using these big complex techniques, it`s just one click to start</p>
             </div>
           </div>
-          <div className="flex flex-col sm:flex-row h-full sm:h-64 p-4 w-full lg:w-[420px] bg-transparent rounded-3xl shadow-2xl space-x-5 justify-center items-center z-20">
+          <div className="flex flex-col sm:flex-row h-full sm:h-64 p-4 w-full lg:w-[420px] bg-transparent rounded-3xl shadow-xl space-x-5 justify-center items-center z-20">
             <Image src={imgfour} alt="" width={180} />
             <div className="flex flex-col items-start space-y-3">
               <p className="text-mainBlue text-center sm:text-left w-full dark:text-white font-bold 3xl:text-2xl 2xl:text-2xl xl:text-xl lg:text-xl md:text-xl sm:text-2xl ph:text-2xl">High volume</p>
               <p className="text-gray text-xl md:text-lg text-center sm:text-left">with the high trading volume, you can easily deposit and withdraw your money and receive it less than 24 hours</p>
             </div>
           </div>
-          <div className="flex flex-col sm:flex-row h-full sm:h-64 p-4 w-full lg:w-[420px] bg-transparent rounded-3xl shadow-2xl space-x-5 justify-center items-center z-20">
+          <div className="flex flex-col sm:flex-row h-full sm:h-64 p-4 w-full lg:w-[420px] bg-transparent rounded-3xl shadow-xl space-x-5 justify-center items-center z-20">
             <Image src={imgfive} alt="" width={120} />
             <div className="flex flex-col items-start space-y-3">
               <p className="text-mainBlue text-center sm:text-left w-full dark:text-white font-bold 3xl:text-2xl 2xl:text-2xl xl:text-xl lg:text-xl md:text-xl sm:text-2xl ph:text-2xl">Big marketing team</p>
               <p className="text-gray text-xl md:text-lg text-center sm:text-left">our big green flag is that we are using the biggest agencies in the crypto space to get bigger day by day follow us on social media</p>
             </div>
           </div>
-          <div className="flex flex-col sm:flex-row h-full sm:h-64 p-4 w-full lg:w-[420px] bg-transparent rounded-3xl shadow-2xl space-x-5 justify-center items-center z-20">
+          <div className="flex flex-col sm:flex-row h-full sm:h-64 p-4 w-full lg:w-[420px] bg-transparent rounded-3xl shadow-xl space-x-5 justify-center items-center z-20">
             <Image src={imgsix} alt="" width={120} />
             <div className="flex flex-col items-start space-y-3">
               <p className="text-mainBlue text-center sm:text-left w-full dark:text-white font-bold 3xl:text-2xl 2xl:text-2xl xl:text-xl lg:text-xl md:text-xl sm:text-2xl ph:text-2xl">Safety</p>
@@ -99,7 +102,7 @@ function Home() {
         </div>
       </div>
       <div className="flex flex-col md:flex-row w-full max-w-[1600px] justify-between items-center p-4 sm:p-12">
-        <div className="flex flex-col w-full md:w-[55%]">
+        <div className="hidden md:flex flex-col w-full md:w-[55%]">
           <div className="flex flex-col w-full justify-start items-start space-y-2">
             <p className="font-bold text-black/80 3xl:text-5xl 2xl:text-5xl xl:text-4xl lg:text-3xl md:text-4xl sm:text-4xl ph:text-3xl">Services</p>
             <p className="text-yellow font-bold 3xl:text-5xl 2xl:text-5xl xl:text-4xl lg:text-3xl md:text-4xl sm:text-4xl ph:text-2xl">Innovate with 4xExChange</p>

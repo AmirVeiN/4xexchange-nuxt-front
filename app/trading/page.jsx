@@ -4,7 +4,7 @@ import { createChart, ColorType } from 'lightweight-charts';
 import React, { useEffect, useRef, useState } from 'react';
 import { useDispatch, useSelector } from "react-redux";
 import LoadingPage from '../../components/loading';
-import { BuyUSDTClient, SellUSDTClient, getUser, GetSellAndBuyClient, GetChartDetail, GetSellAndBuyPublic, ChartData } from "../GlobalRedux/Features/userSlice";
+import { BuyUSDTClient, SellUSDTClient, getUser, GetPriceChange, GetSellAndBuyClient, GetChartDetail, GetSellAndBuyPublic, ChartData } from "../GlobalRedux/Features/userSlice";
 import Popup from '../../components/modal';
 import { IoInformationCircleSharp } from "react-icons/io5";
 import { FaBoxArchive } from "react-icons/fa6";
@@ -50,6 +50,7 @@ export default function ChartComponent() {
     const handleSellUSDT = (e) => setSellUSDT(e.target.value);
 
     const user = useSelector((state) => state.user.user)
+    const priceChange = useSelector((state) => state.user.priceChange)
     const infoClient = useSelector((state) => state.user.SellAndBuyClient)
     const infoPublic = useSelector((state) => state.user.SellAndBuyPublic)
 
@@ -57,7 +58,13 @@ export default function ChartComponent() {
     useEffect(() => {
 
         if (!user) {
-            dispach(getUser());
+            dispach(getUser(localStorage.getItem('access')));
+            return;
+
+        }
+
+        if (!priceChange) {
+            dispach(GetPriceChange());
             return;
 
         }
@@ -75,17 +82,13 @@ export default function ChartComponent() {
             }
         }
 
-    }, [infoClient, infoPublic, dispach, user]);
+    }, [infoClient, infoPublic, dispach, user, priceChange]);
 
 
-    if ((!infoPublic) || (user && !infoClient)) {
+    if ((!infoPublic) || (user && !infoClient) || !priceChange) {
         return <LoadingPage />
     }
 
-    if (!infoPublic) {
-        dispach(GetSellAndBuyPublic());
-        return;
-    }
 
     const handleSubmit = (type) => {
 
@@ -216,6 +219,13 @@ export default function ChartComponent() {
         return <Alert type="buy" user={user.email} tether={parseFloat(BuyUSDT)} tokenRecive={BuyUSDT / lastClosePrice} tokenPrice={lastClosePrice} />
     }
 
+    const absNumber = (price) => {
+        let absolute_value = Math.abs(price);
+        let parts = absolute_value.toString().split('.');
+        let integerPart = parts[0];
+        return integerPart
+    }
+
     return (
         <div className='bg-white flex flex-col space-y-10 w-full h-full pt-2 md:pt-32 relative'>
             <div className={(!showMessage && !showMessage2 && !showMessage1) ? 'flex flex-col w-full justify-center items-center space-y-5' : 'blur-md flex flex-col w-full justify-center items-center space-y-5'}>
@@ -239,8 +249,8 @@ export default function ChartComponent() {
                                 <p className="text-black font-bold">24H Volumes : {volume24h}</p>
                             </div>
                             <div className='flex flex-row space-x-1 justify-center items-center'>
-                                <p className="text-black font-bold">Update : </p>
-                                <FaCircleCheck alt="" size={20} color="#21749c" />
+                                <p className='text-black font-bold'>24H : </p>
+                                <p className={priceChange.change_status === "low" && "text-tradeRed font-bold" || priceChange.change_status === "high" && "text-greenButton font-bold" || priceChange.change_status === "dont" && "text-yellowBorder font-bold"}>{absNumber(priceChange.change_percentage)} %</p>
                             </div>
                         </div>
                         <div className='flex lg:hidden flex-col space-y-3 text-xs justify-between items-center w-full'>
@@ -256,8 +266,8 @@ export default function ChartComponent() {
                                     </div>
                                 </div>
                                 <div className='flex flex-row space-x-1 justify-center items-center'>
-                                    <p className="text-black font-bold">Update : </p>
-                                    <FaCircleCheck alt="" size={20} color="#21749c" />
+                                    <p className='text-black font-bold'>24H : </p>
+                                    <p className={priceChange.change_status === "low" && "text-tradeRed font-bold" || priceChange.change_status === "high" && "text-greenButton font-bold" || priceChange.change_status === "dont" && "text-yellowBorder font-bold"}>{absNumber(priceChange.change_percentage)} %</p>
                                 </div>
                             </div>
                             <div className='flex flex-row justify-between w-full'>

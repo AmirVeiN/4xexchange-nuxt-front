@@ -17,7 +17,7 @@ const WebSocketComponent = ({ onLastClosePriceUpdate, onVolume24hUpdate }) => {
 
     useEffect(() => {
 
-        socket.current = new WebSocket('ws://localhost:8000/ws/chart/');
+        socket.current = new WebSocket('wss://server.4xexchange.com/ws/chart/');
 
         socket.current.onopen = () => {
             console.log('WebSocket is open now.');
@@ -31,6 +31,7 @@ const WebSocketComponent = ({ onLastClosePriceUpdate, onVolume24hUpdate }) => {
 
         socket.current.onmessage = (event) => {
             const data = JSON.parse(event.data);
+            console.log(data);
             if (data.volume_24h !== undefined) {
                 onVolume24hUpdate(data.volume_24h);
                 return;
@@ -48,6 +49,7 @@ const WebSocketComponent = ({ onLastClosePriceUpdate, onVolume24hUpdate }) => {
                 );
 
                 console.log('Updated uniqueData:', uniqueData);
+                console.log(uniqueData);
 
                 if (uniqueData.length > 0) {
                     const lastClosePrice = uniqueData[uniqueData.length - 1].close;
@@ -74,7 +76,7 @@ const WebSocketComponent = ({ onLastClosePriceUpdate, onVolume24hUpdate }) => {
     }, [timeFrame, onVolume24hUpdate, onLastClosePriceUpdate]);
 
     const sendMessage = (keyword, page) => {
-        if (socket.current) {
+        if (socket.current && socket.current.readyState === WebSocket.OPEN) {
             console.log(`Sending message: keyword=${keyword}, page=${page}`);
 
             socket.current.send(JSON.stringify({ request: "chart", keyword, page }));
