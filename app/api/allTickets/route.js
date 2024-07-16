@@ -8,7 +8,7 @@ export async function GET(request) {
     const access = await request.headers.get('Authorization')
     try {
 
-        const response = await axios.get('https://server.4xexchange.com/api/v1/tickets/all/', {
+        const response = await axios.get('http://localhost:8000/api/v1/tickets/all/', {
             headers: {
                 Authorization: "JWT " + access,
             },

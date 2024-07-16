@@ -8,7 +8,7 @@ if (typeof localStorage !== "undefined") {
 }
 
 const axiosInstance = axios.create({
-    baseURL: 'https://server.4xexchange.com/api/v1/',
+    baseURL: 'http://localhost:8000/api/v1/',
     timeout: 5000,
     headers: {
 

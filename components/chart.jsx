@@ -17,7 +17,7 @@ const WebSocketComponent = ({ onLastClosePriceUpdate, onVolume24hUpdate }) => {
 
     useEffect(() => {
 
-        socket.current = new WebSocket('wss://server.4xexchange.com/ws/chart/');
+        socket.current = new WebSocket('ws://localhost:8000/ws/chart/');
 
         socket.current.onopen = () => {
             console.log('WebSocket is open now.');
